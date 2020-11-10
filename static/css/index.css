@@ -26,3 +26,19 @@ input {
     border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
     border-image: initial;
 }
+
+.page {
+    height: 100vh;
+    width: 100vw;
+}
+
+.content {
+    height: 400px;
+    width: 600px;
+    background-color: #B5C5C6;
+    position: absolute;
+    top: 50%;
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
