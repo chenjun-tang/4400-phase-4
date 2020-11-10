@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="../static/css/register.css">
+</head>
+<body>
+    <h1>Register</h1>
+    <form action="#" method="POST">
+        <label for="username">Username</label>
+        <input type="text" name="" id="username">
+
+        <label for="email">Password</label>
+        <input type="text" name="" id="email"><br>
+
+        <label for="fname">First Name</label>
+        <input type="text" name="" id="fname">
+
+        <label for="lname">Last Name</label>
+        <input type="text" name="" id="lname"><br>
+
+        <label for="password">Password</label>
+        <input type="password" name="" id="password">
+
+        <label for="conf_pwd">Confirm Password</label>
+        <input type="password" name="" id="conf_pwd"><br>
+
+        <div class="tab_container">
+            <button>Student</button>
+            <button>Employee</button>
+            <div class="student">
+                <label for="housing_type">Housing Type</label>
+                <select name="housing_type">
+                    <option value="greek">Greek</option>
+                </select>
+    
+                <label for="location">Location</label>
+                <select name="location">
+                    <option value="east">East</option>
+                    <option value="west">West</option>
+                </select>
+    
+            </div>
+            
+            <div class="employee"> 
+                <label for="phone">Phone No.</label>
+                <input type="text" name="" id="phone"><br>
+                Site Tester
+                <input type="checkbox" checked="checked" name="Sex" value="site_tester" />
+                Lab Tech
+                <input type="checkbox" name="Sex" value=lab_tech" />
+                </form>
+            </div>
+
+        </div>
+        
+        <button>Back to Login</button>
+        <button>Register</button>
+    </form>
+</body>
+</html>
