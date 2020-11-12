@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>{{user_type}} Home</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/home.css">
 </head>
 <body>
     <h1>{{user_type}} Home</h1>
@@ -25,22 +27,22 @@
 
     
     {% elif user_type == "Lab Technician/Tester"%}    
-    <button>Change Testing Site</button>
-    <button>View Appointments</button>
-    <button>Create Appointments</button>
-    
-    <button>Process Pool</button>
-    <button>View My Processed Tests</button>
+        <button>Change Testing Site</button>
+        <button>View Appointments</button>
+        <button>Create Appointments</button>
+        
+        <button>Process Pool</button>
+        <button>View My Processed Tests</button>
 
-    <button>Create Pool</button>
-    <button>View Pools</button>
+        <button>Create Pool</button>
+        <button>View Pools</button>
 
     
     {% elif user_type == "Admin"%}
-    <button>Reassign Testers</button>
-    <button>Create Testing Site</button>
-    <button>Create Appointment</button>
-    <button>View Appointments</button>    
+        <button>Reassign Testers</button>
+        <button>Create Testing Site</button>
+        <button>Create Appointment</button>
+        <button>View Appointments</button>    
     {% endif %}
     
     <button>View Aggregate Results</button>    

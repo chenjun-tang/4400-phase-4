@@ -20,5 +20,9 @@ def home():
     user_type = "Lab Technician/Tester"
     return render_template("home.html", user_type = user_type)
 
+@app.route("/aggregate_results")
+def aggregate_results():
+    return render_template("aggregate_results.html")
+
 if __name__ == '__main__':
     app.run(debug=True)
