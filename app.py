@@ -1,10 +1,14 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 import os
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
+    if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+        # Create variables for easy access
+        username = request.form['username']
+        password = request.form['password']
     return render_template("index.html")
 
 @app.route("/register", methods=['GET', 'POST'])
