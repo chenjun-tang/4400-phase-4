@@ -13,13 +13,14 @@
             <h1>GT COVID-19 Testing</h1>
             <form action="#" method="POST">
                 <label for="username">Username</label>
-                <input type="text" name="" id="username"><br>
+                <input type="text" name="" id="username" placeholder="Username" required>
     
                 <label for="password">Password</label>
-                <input type="password" name="" id="password"><br>
+                <input type="password" name="" id="password" placeholder="Password" required>
                 
-                <button>Login</button>
-                <button>Register</button>
+                
+				<input type="submit" value="Login" class="custom_btn">
+				<a href="{{ url_for('register')}}" class="custom_btn">Register</a>
             </form>
         </div>
     </div>
