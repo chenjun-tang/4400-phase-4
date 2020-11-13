@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <!-- <link rel="stylesheet" href="../static/css/style.css"> -->
+    <link rel="stylesheet" href="../static/css/style.css">
     <link rel="stylesheet" href="../static/css/register.css">
 </head>
 <body>
@@ -31,12 +31,15 @@
                 <input type="password" name="" id="conf_pwd"><br>
 
                 <div class="tab_container">
-                    <button id="stuBtn" type="button">Student</button>
-                    <button id="empBtn" type="button">Employee</button>
+                    <button id="stuBtn" type="button" class="switch active">Student</button>
+                    <button id="empBtn" type="button" class="switch">Employee</button>
                     <div class="student" id="student">
                         <label for="housing_type">Housing Type</label>
                         <select name="housing_type">
-                            <option value="greek">Greek</option>
+                            <option value="off_campus">Off-Campus House</option>
+                            <option value="off_campus">Off-Campus Appartment</option>
+                            <option value="greek">Greek Housing</option>
+                            <option value="greek">Student Housing</option>
                         </select>
             
                         <label for="location">Location</label>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/student_test_results.css">
+</head>
+<body>
+    <div class="page">
+        <div class="content">
+            <h1>Student View Test Results</h1>
+            <form action=""></form>
+                <label for="status">Status:</label>
+                <select name="" id="status">
+                    <option value="all">All</option>
+                    <option value="negative">Negative</option>
+                    <option value="positive">Positive</option>                
+                    <option value="pending">Pending</option>
+                </select>
+
+                <label for="">Timeslot Date:</label>
+                <input type="date"> - 
+                <input type="date"><input type="submit" value="Filter">
+                <input type="reset" value="Reset">
+            </form>
+            <a href="{{url_for('home')}}">Back(Home)</a>
+        </div>
+    </div>
+</body>
+</html>

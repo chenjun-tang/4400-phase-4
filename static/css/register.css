@@ -22,9 +22,35 @@
 .content label {
     display: inline-block;
     width: 150px;
+    height: 40px;
+    line-height: 40px;    
+    font-size: 16px;
     text-align: right;
 }
 
 .content input {
     width: 150px;
+    height: 40px;
+    border: 1px solid #dee0e4;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    padding: 0 15px;
+}
+
+.content .switch{
+    border: 0;   
+    float: left; 
+    position: relative;
+    width: 50%;
+    height: 40px;
+    background: #fff;
+    text-align: center;
+    font-size: 16px;
+    line-height: 40px;
+    font-style: normal;
+}
+
+.content .active {    
+    background:  #3274d6;
+    color: #fff;
 }

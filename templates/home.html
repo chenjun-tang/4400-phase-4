@@ -8,44 +8,49 @@
     <link rel="stylesheet" href="../static/css/home.css">
 </head>
 <body>
-    <h1>{{user_type}} Home</h1>
-    {% if user_type == "Student"%}
-        <button>View My Results</button>
-        <button>Sign Up for a Test</button>
+    <div class="page">
+        <div class="content">
+            <h1>{{user_type}} Home</h1>
+            {% if user_type == "Student"%}
+                <a href="#">View My Results</a>
+                <a href="#">Sign Up for a Test</a>
 
-    {% elif user_type == "Tester"%}
-        <button>Change Testing Site</button>
-        <button>View Appointments</button>
-        <button>Create Appointments</button>
+            {% elif user_type == "Tester"%}
+                <a href="#">Change Testing Site</a>
+                <a href="#">View Appointments</a>
+                <a href="#">Create Appointments</a>
 
-    {% elif user_type == "Lab Technician"%}
-        <button>Process Pool</button>
-        <button>View My Processed Tests</button>
+            {% elif user_type == "Lab Technician"%}
+                <a href="#">Process Pool</a>
+                <a href="#">View My Processed Tests</a>
 
-        <button>Create Pool</button>
-        <button>View Pools</button>
+                <a href="#">Create Pool</a>
+                <a href="#">View Pools</a>
 
+            
+            {% elif user_type == "Lab Technician/Tester"%}    
+                <a href="#">Change Testing Site</a>
+                <a href="#">View Appointments</a>
+                <a href="#">Create Appointments</a>
+                
+                <a href="#">Process Pool</a>
+                <a href="#">View My Processed Tests</a>
+
+                <a href="#">Create Pool</a>
+                <a href="#">View Pools</a>
+
+            
+            {% elif user_type == "Admin"%}
+                <a href="#">Reassign Testers</a>
+                <a href="#">Create Testing Site</a>
+                <a href="#">Create Appointment</a>
+                <a href="#">View Appointments</a>    
+            {% endif %}
+            
+            <a href="#">View Aggregate Results</a>    
+            <a href="#">View Daily Results</a>
+        </div>
+    </div>
     
-    {% elif user_type == "Lab Technician/Tester"%}    
-        <button>Change Testing Site</button>
-        <button>View Appointments</button>
-        <button>Create Appointments</button>
-        
-        <button>Process Pool</button>
-        <button>View My Processed Tests</button>
-
-        <button>Create Pool</button>
-        <button>View Pools</button>
-
-    
-    {% elif user_type == "Admin"%}
-        <button>Reassign Testers</button>
-        <button>Create Testing Site</button>
-        <button>Create Appointment</button>
-        <button>View Appointments</button>    
-    {% endif %}
-    
-    <button>View Aggregate Results</button>    
-    <button>View Daily Results</button>
 </body>
 </html>
