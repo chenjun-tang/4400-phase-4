@@ -28,5 +28,9 @@ def home():
 def aggregate_results():
     return render_template("aggregate_results.html")
 
+@app.route("/daily_results")
+def daily_results():
+    return render_template("daily_results.html")
+
 if __name__ == '__main__':
     app.run(debug=True)

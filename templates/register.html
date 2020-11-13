@@ -12,23 +12,28 @@
         <div class="content">
             <h1>Register</h1>
             <form action="#" method="POST">
-                <label for="username">Username</label>
-                <input type="text" name="" id="username">
+                <div class="left_box">
+                    <label for="username">Username</label>
+                    <input type="text" name="" id="username">
 
-                <label for="email">Email</label>
-                <input type="email" name="" id="email"><br>
+                    <label for="fname">First Name</label>
+                    <input type="text" name="" id="fname">
 
-                <label for="fname">First Name</label>
-                <input type="text" name="" id="fname">
+                    <label for="password">Password</label>
+                    <input type="password" name="" id="password">
+                </div>
+                
+                <div class="right_box">
+                    <label for="email">Email</label>
+                    <input type="email" name="" id="email"><br>                    
 
-                <label for="lname">Last Name</label>
-                <input type="text" name="" id="lname"><br>
+                    <label for="lname">Last Name</label>
+                    <input type="text" name="" id="lname"><br>                    
 
-                <label for="password">Password</label>
-                <input type="password" name="" id="password">
+                    <label for="conf_pwd">Confirm Password</label>
+                    <input type="password" name="" id="conf_pwd"><br>
 
-                <label for="conf_pwd">Confirm Password</label>
-                <input type="password" name="" id="conf_pwd"><br>
+                </div>
 
                 <div class="tab_container">
                     <button id="stuBtn" type="button" class="switch active">Student</button>
@@ -50,15 +55,16 @@
                     </div>
                     
                     <div class="employee" id="employee" style="display:none"> 
-                        <label for="phone">Phone No.</label>
-                        <input type="text" name="" id="phone"><br>
                         Site Tester
                         <input type="checkbox" name="Sex" value="site_tester" />
                         Lab Tech
                         <input type="checkbox" name="Sex" value=lab_tech" />
+                        <label for="phone">Phone No.</label>
+                        <input type="text" name="" id="phone">
+                        
                     </div>
                 </div>
-                <a href="{{url_for('index')}}">Back to Login</a>
+                <a href="{{url_for('index')}}" class="custom_btn">Back to Login</a>
                 <input type="submit" value="Register" class="custom_btn">
             </form>        
         </div>
