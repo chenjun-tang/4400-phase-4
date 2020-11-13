@@ -13,7 +13,6 @@ input {
 }
 
 .content {
-    height: 400px;
     width: 400px;
     background-color: #fff;
     position: absolute;
@@ -34,13 +33,13 @@ input {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 120px;
+    width: 50px;
     height: 50px;
     background-color: #3274d6;
     color: #ffffff;
 }
 .content form input[type="password"], .content form input[type="text"] {
-    width: 210px;
+    width: 310px;
     height: 50px;
     border: 1px solid #dee0e4;
     box-sizing: border-box;
@@ -48,20 +47,16 @@ input {
     padding: 0 15px;
 }
 
-.custom_btn {
-    width: 128.18px;
+.content .custom_btn {
+    position: relative;
+    width: 50%;
     height: 40px;
-    border-radius: 20px;
-    transform: translate(-50%, 0%);
-    background: #000000;
+    background: #3274d6;
+    margin-top: 30px;
     color: #fff;
     text-align: center;
-    text-decoration: none;
-    display: inline-block;
     font-size: 16px;
-    font-family: Poppins;
+    line-height: 40px;
     font-style: normal;
     font-weight: bold;
-
-    text-transform: uppercase;
 }

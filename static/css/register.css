@@ -6,7 +6,7 @@
 
 .content {
     height: 400px;
-    width: 600px;
+    width: 650px;
     background-color: #fff;
     position: absolute;
     top: 50%;
@@ -17,4 +17,14 @@
 
 .employee {
     display: none;
+}
+
+.content label {
+    display: inline-block;
+    width: 150px;
+    text-align: right;
+}
+
+.content input {
+    width: 150px;
 }
