@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Appointment</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/create_appointment.css">
+</head>
+<body>
+    <div class="page">
+        <div class="content">
+            <h1>Create an Appointment</h1>
+            <form action="">                
+                <label for="site">Site</label>
+                <select name="" id="site">
+                    <option value="Stamps">Stamps</option>
+                </select><br>
+
+                <label for="date">Date</label>
+                <input type="date"><br>
+
+                <label for="time">Time</label>
+                <input type="time">
+
+                <input type="submit" id="submit" style="display: none;">
+            </form>
+            <a href="{{url_for('home')}}" class="custom_btn">Back(Home)</a>
+            <label for="submit" class="custom_btn">Create Appointment</label>
+        </div>
+    </div>
+</body>
+</html>

@@ -15,7 +15,7 @@ def index():
 def register():
     return render_template('register.html')
 
-@app.route("/home")
+@app.route("/home", methods=['GET', 'POST'])
 def home():
     user_type = "Student"
     user_type = "Tester"
