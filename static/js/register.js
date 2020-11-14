@@ -1,3 +1,5 @@
+
+
 var stuBtn = document.getElementById("stuBtn");
 var empBtn = document.getElementById("empBtn");
 
@@ -25,3 +27,5 @@ empBtn.onclick = function () {
         stuBtn.classList.remove("active");
     }
 }
+
+

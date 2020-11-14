@@ -6,6 +6,7 @@
     <title>Register</title>
     <link rel="stylesheet" href="../static/css/style.css">
     <link rel="stylesheet" href="../static/css/register.css">
+    <script src="../static/js/function.js"></script>
 </head>
 <body>
     <div class="page">
@@ -31,7 +32,8 @@
                     <input type="text" name="" id="lname" required>                    
 
                     <label for="conf_pwd">Confirm Password</label>
-                    <input type="password" name="" id="conf_pwd" required>
+                    <input type="password" name="" id="conf_pwd" onkeyup=validate() required>
+                    <span id="tips"></span></input></li>
 
                 </div>
 
@@ -65,12 +67,15 @@
                     </div>
                 </div>
                 <a href="{{url_for('index')}}" class="custom_btn">Back to Login</a>
-                <input type="submit" value="Register" class="custom_btn">
+                <input type="submit" value="Register" id="mySubmit"  class="custom_btn">
             </form>        
         </div>
     </div>
 
     <script src="../static/js/register.js"></script>
+    <script>
+
+    </script>
 
 </body>
 </html>
