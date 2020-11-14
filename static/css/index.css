@@ -25,6 +25,7 @@ input {
     height: 50px;
     background-color: #3274d6;
     color: #ffffff;
+    margin: 0;
 }
 .content form input[type="password"], .content form input[type="text"] {
     width: 310px;
