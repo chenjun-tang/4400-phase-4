@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Testing Site</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/create_testing_site.css">
+
+</head>
+<body>    
+    <div class="page">
+        <div class="content">
+            <h1>Create a Testing Site</h1>
+            <form action="">
+                <label for="site">Site Name</label>
+                <input type="text" name="site" id="site"><br>
+                
+                <label for="address">Street Address</label>
+                <input type="text" name="address" id="address"><br>
+
+                <label for="city">Ctiy</label>
+                <input type="text" name="city" id="city">
+                
+                <label for="state">State</label>
+                <input type="text" name="state" id="state">
+                <br>
+                
+                <label for="zip">Zip Code</label>
+                <input type="text" name="zip" id="zip">
+
+                <label for="location">Location</label>
+                <select name="location" id="locaiton">
+                    <option value="west">West</option>
+                    <option value="east">East</option>
+                </select>
+
+                <a href="{{url_for('home')}}" class="custom_btn">Back(Home)</a>
+                <input type="submit" value="Create Site" class="custom_btn">
+            </form>
+        </div>
+    </div>
+</body>
+</html>
