@@ -24,6 +24,10 @@ def home():
     # user_type = "Lab Technician/Tester"
     return render_template("home.html", user_type = user_type)
 
+@app.route("/student_test_results")
+def student_test_results():
+    return render_template("student_test_results.html")
+
 @app.route("/aggregate_results")
 def aggregate_results():
     return render_template("aggregate_results.html")

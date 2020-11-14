@@ -11,7 +11,7 @@
     <div class="page">
         <div class="content">
             <h1>Student View Test Results</h1>
-            <form action=""></form>
+            <form action="">
                 <label for="status">Status:</label>
                 <select name="" id="status">
                     <option value="all">All</option>
@@ -22,10 +22,11 @@
 
                 <label for="">Timeslot Date:</label>
                 <input type="date"> - 
-                <input type="date"><input type="submit" value="Filter">
-                <input type="reset" value="Reset">
+                <input type="date">
+                <a href="{{url_for('home')}}" class="custom_btn">Back(Home)</a>
+                <input type="submit" value="Filter" class="custom_btn">
+                <input type="reset" value="Reset" class="custom_btn">
             </form>
-            <a href="{{url_for('home')}}">Back(Home)</a>
         </div>
     </div>
 </body>
