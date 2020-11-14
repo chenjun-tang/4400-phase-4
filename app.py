@@ -6,13 +6,21 @@ app = Flask(__name__, template_folder="templates", static_folder="static")
 @app.route("/", methods=['GET', 'POST'])
 def index():
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
-        # Create variables for easy access
         username = request.form['username']
         password = request.form['password']
+        # print(username)
+
+        # we can now get the username and password here
+        # after checking, we need to find the user type and redirect to home
+        if False:
+            return redirect(url_for("home", user_type))
     return render_template("index.html")
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
+    # do the similar as the function above 
+    # if request.method == 'POST'
+    
     return render_template('register.html')
 
 @app.route("/home", methods=['GET', 'POST'])
@@ -31,6 +39,14 @@ def student_test_results():
 @app.route("/aggregate_results")
 def aggregate_results():
     return render_template("aggregate_results.html")
+
+@app.route("/explore_test_result")
+def explore_test_result():
+    return render_template("explore_test_result.html")
+
+@app.route("/sign_up")
+def sign_up():
+    return render_template("sign_up.html")
 
 @app.route("/daily_results")
 def daily_results():

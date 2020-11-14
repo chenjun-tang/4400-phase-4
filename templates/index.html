@@ -12,12 +12,12 @@
     <div class="page">
         <div class="content">
             <h1>GT COVID-19 Testing</h1>
-            <form action="#" method="POST">
+            <form action="{{ url_for('login') }}" method="POST">
                 <label for="username"><i class="fas fa-user"></i></label>
-                <input type="text" name="" id="username" placeholder="Username" required>
+                <input type="text" name="username" id="username" placeholder="Username" required>
     
                 <label for="password"><i class="fas fa-lock"></i></label>
-                <input type="password" name="" id="password" placeholder="Password" required>
+                <input type="password" name="password" id="password" placeholder="Password" required>
                 
                 <label for="login" class="login_btn">Login</label>
 				<input type="submit" id="login" style="display: none;">
