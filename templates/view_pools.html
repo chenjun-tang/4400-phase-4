@@ -3,32 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Labtech_Tests_Processed</title>    
+    <title>View Pools</title>    
     <link rel="stylesheet" href="../static/css/style.css">
     <link rel="stylesheet" href="../static/css/labtech_tests_processed.css">
 </head>
 <body>
     <div class="page">
         <div class="content">
-            <h1>Lab Tech Processed</h1>
+            <h1>View Pools</h1>
             <form action="">
 
                 <label for="">Date Tested:</label>
                 <input id="start_date" type="date"> -
                 <input id="end_date" type="date"><br>
 
-                <label for="testing_site">Testing Result:</label>
+                <label for="testing_site">Pool Status:</label>
                 <select name="testing_site">            
                     <option value="all">All</option>
+                    <option value="positive">Positive</option>
+                    <option value="negative">Negative</option>
                 </select><br>
+
+                <label for="">Processed By:</label>
+                <input type="text" name="processedBy" id="processedBy" placeholder="" >
 
                 <table class="gridtable" >
                     <tr>
-                        <th>Test ID#</th>
-                        <th>Pool ID</th>
+                        <th>Pool ID#</th>
+                        <th>Test Ids</th>
                         <th>Date Tested</th>
-                        <th>Date Processed</th>
-                        <th>Result</th>
+                        <th>Processed By</th>
+                        <th>Pool Status</th>
                     </tr>
                     {% for k,v in data_dict.items() %}
                     <tr>

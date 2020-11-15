@@ -70,6 +70,15 @@ def labtech_tests_processed():
     }
     return render_template("labtech_tests_processed.html", data_dict=data)
 
+@app.route("/view_pools", methods=['GET', 'POST'])
+def view_pools():
+    data = {
+        1:['23332', '1,2,3','8/17/20','jim123','Negative'],
+        2:['2332', '4,5,6','8/17/20','jim456','Negative'],
+    }
+    return render_template("view_pools.html",data_dict=data)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
