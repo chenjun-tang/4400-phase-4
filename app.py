@@ -52,6 +52,10 @@ def sign_up():
 def create_appointment():
     return render_template("create_appointment.html")
 
+@app.route("/create_testing_site")
+def create_testing_site():
+    return render_template("create_testing_site.html")
+
 @app.route("/daily_results")
 def daily_results():
     return render_template("daily_results.html")
