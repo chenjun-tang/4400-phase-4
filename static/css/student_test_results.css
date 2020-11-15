@@ -5,3 +5,12 @@
 .content form .custom_btn {
     width: 150px;
 }
+
+.content form label {
+    display: inline;
+}
+
+.content select, .content input[type="date"] {
+    font-size: 16px;
+    border: 1px solid #5b6574;
+}
