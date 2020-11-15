@@ -13,28 +13,28 @@
         <div class="content">
             <h1>Register</h1>
             <form action="{{ url_for('register')}}" method="POST">
-                <div class="left_box">
-                    <label for="username">Username</label>
+                <div><label for="username">Username</label>
                     <input type="text" name="username" id="username" required>
+                    
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" required>  
+                </div>
 
+                <div>
                     <label for="fname">First Name</label>
                     <input type="text" name="fname" id="fname" required>
 
+                    <label for="lname">Last Name</label>
+                    <input type="text" name="lname" id="lname" required> 
+                </div>
+
+                <div>
                     <label for="password">Password</label>
                     <input type="password" name="password" id="password" required>
-                </div>
-                
-                <div class="right_box">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email" required>                    
-
-                    <label for="lname">Last Name</label>
-                    <input type="text" name="lname" id="lname" required>                    
 
                     <label for="conf_pwd">Confirm Password</label>
-                    <input type="password" name="conf_pwd" id="conf_pwd" onkeyup=validate() required>
+                    <input type="password" name="conf_pwd" id="conf_pwd" onkeyup=validate() required><br>
                     <span id="tips"></span></input></li>
-
                 </div>
 
                 <div class="tab_container">

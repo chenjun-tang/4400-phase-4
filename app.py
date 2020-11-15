@@ -2,28 +2,9 @@ from flask import Flask, render_template, request, redirect, url_for
 import os
 from flaskext.mysql import MySQL
 from execSQL import *
+from hashlib import md5
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
-
-mysql = MySQL()
-app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
-#app.config['MYSQL_DATABASE_DB'] = 'Database'
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-mysql.init_app(app)
-
-conn = mysql.connect()
-cursor =conn.cursor()
-
-exec_sql_file(cursor, './db_init.sql')
-# cursor.execute("SELECT * FROM STUDENT")
-# data = cursor.fetchall()
-# print(data)
-exec_proc_file(cursor, './db_procedure.sql')
-#cursor.callproc('view_testers')
-#cursor.execute("SELECT * FROM view_testers_result")
-#data = cursor.fetchall()
-#print(data)
 
 
 # screen 1
@@ -44,8 +25,13 @@ def index():
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     # do the similar as the function above 
-    # if request.method == 'POST'
-    
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        fname = request.form['fname']
+        lname = request.form['lname']
+        password = md5(request.form['password'].encode('utf-8'))
+        print(username, email, fname, password)
     return render_template('register.html')
 
 # screen 3
@@ -127,6 +113,11 @@ def create_testing_site():
 @app.route("/explore_pool_result")
 def explore_pool_result():
     return render_template("explore_pool_result.html")
+
+# screen 17
+@app.route("/change_testing_site")
+def change_testing_site():
+    return render_template("change_testing_site")
 
 # screen 18
 @app.route("/daily_results")
