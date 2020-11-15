@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Pool Result</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/explore_pool_result.css">
+</head>
+<body>
+    <div class="page">
+        <div class="content">
+            <h1>Explore Pool Result</h1>
+
+            <h2>Pool Metadata</h2>
+            <table class="gridtable" >
+                <tr>
+                    <th>Pool ID</th>
+                    <th>Date Processed</th>
+                    <th>Pool Result</th>
+                    <th>Processed By</th>
+                </tr>
+            </table>
+
+            <h2>Tests In Pool</h2>
+            <table class="gridtable" >
+                <tr>
+                    <th>Test ID</th>
+                    <th>Date Tested</th>
+                    <th>Testing Site</th>
+                    <th>Test Result</th>
+                </tr>
+            </table>
+            <a href="{{url_for('home')}}" class="custom_btn">Back(Home)</a>
+        </div>
+    </div>
+</body>
+</html>

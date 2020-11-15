@@ -1,7 +1,30 @@
 from flask import Flask, render_template, request, redirect, url_for
 import os
+from flaskext.mysql import MySQL
+from execSQL import *
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
+
+mysql = MySQL()
+app.config['MYSQL_DATABASE_USER'] = 'root'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
+#app.config['MYSQL_DATABASE_DB'] = 'Database'
+app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+mysql.init_app(app)
+
+conn = mysql.connect()
+cursor =conn.cursor()
+
+exec_sql_file(cursor, './db_init.sql')
+# cursor.execute("SELECT * FROM STUDENT")
+# data = cursor.fetchall()
+# print(data)
+exec_proc_file(cursor, './db_procedure.sql')
+#cursor.callproc('view_testers')
+#cursor.execute("SELECT * FROM view_testers_result")
+#data = cursor.fetchall()
+#print(data)
+
 
 # screen 1
 @app.route("/", methods=['GET', 'POST'])
@@ -99,6 +122,11 @@ def create_appointment():
 @app.route("/create_testing_site")
 def create_testing_site():
     return render_template("create_testing_site.html")
+
+# screen 16
+@app.route("/explore_pool_result")
+def explore_pool_result():
+    return render_template("explore_pool_result.html")
 
 # screen 18
 @app.route("/daily_results")
