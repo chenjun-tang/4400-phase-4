@@ -12,7 +12,7 @@ app = Flask(__name__, template_folder="templates", static_folder="static")
 def index():
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
-        password = request.form['password']
+        password = md5(request.form['password'].encode('utf-8'))
         # print(username)
 
         # we can now get the username and password here
@@ -26,12 +26,14 @@ def index():
 def register():
     # do the similar as the function above 
     if request.method == 'POST':
+        print(request.form)
         username = request.form['username']
         email = request.form['email']
         fname = request.form['fname']
         lname = request.form['lname']
         password = md5(request.form['password'].encode('utf-8'))
-        print(username, email, fname, password)
+        if "lab_tech" in request.form:
+            print("lab_tech")
     return render_template('register.html')
 
 # screen 3
