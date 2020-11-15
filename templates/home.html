@@ -12,13 +12,13 @@
         <div class="content">
             <h1>{{user_type}} Home</h1>
             {% if user_type == "Student"%}
-                <a href="#">View My Results</a>
-                <a href="#">Sign Up for a Test</a>
+                <a href="{{url_for('student_test_results')}}">View My Results</a>
+                <a href="{{url_for('sign_up')}}">Sign Up for a Test</a>
 
             {% elif user_type == "Tester"%}
                 <a href="#">Change Testing Site</a>
                 <a href="#">View Appointments</a>
-                <a href="#">Create Appointments</a>
+                <a href="{{url_for('create_appointment')}}">Create Appointment</a>
 
             {% elif user_type == "Lab Technician"%}
                 <a href="#">Process Pool</a>
@@ -26,7 +26,6 @@
 
                 <a href="#">Create Pool</a>
                 <a href="#">View Pools</a>
-
             
             {% elif user_type == "Lab Technician/Tester"%}    
                 <a href="#">Change Testing Site</a>

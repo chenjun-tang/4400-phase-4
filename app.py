@@ -12,8 +12,8 @@ def index():
 
         # we can now get the username and password here
         # after checking, we need to find the user type and redirect to home
-        if False:
-            return redirect(url_for("home", user_type))
+        if True:
+            return redirect(url_for("home"))
     return render_template("index.html")
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -27,9 +27,9 @@ def register():
 def home():
     user_type = "Student"
     user_type = "Tester"
-    user_type = "Admin"
-    user_type = "Lab Technician"
-    # user_type = "Lab Technician/Tester"
+    # user_type = "Admin"
+    # user_type = "Lab Technician"
+    user_type = "Lab Technician/Tester"
     return render_template("home.html", user_type = user_type)
 
 @app.route("/student_test_results")
@@ -47,6 +47,14 @@ def explore_test_result():
 @app.route("/sign_up")
 def sign_up():
     return render_template("sign_up.html")
+
+@app.route("/create_appointment")
+def create_appointment():
+    return render_template("create_appointment.html")
+
+@app.route("/create_testing_site")
+def create_testing_site():
+    return render_template("create_testing_site.html")
 
 @app.route("/daily_results")
 def daily_results():

@@ -13,7 +13,13 @@
         <div class="content">
             <h1>Create a Testing Site</h1>
             <form action="">
-                <label for="site">Site Name</label>
+                {% set states = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA", 
+                "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", 
+                "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", 
+                "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", 
+                "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"] %} 
+
+                <label for="site">Site Name</label>                
                 <input type="text" name="site" id="site"><br>
                 
                 <label for="address">Street Address</label>
@@ -23,7 +29,11 @@
                 <input type="text" name="city" id="city">
                 
                 <label for="state">State</label>
-                <input type="text" name="state" id="state">
+                <select name="state" id="state">
+                    {% for state in states %}
+                    <option value="{{state}}">{{state}}</option>
+                    {% endfor %}
+                </select>
                 <br>
                 
                 <label for="zip">Zip Code</label>
@@ -34,6 +44,12 @@
                     <option value="west">West</option>
                     <option value="east">East</option>
                 </select>
+                <br>
+
+                <label for="tester">Site Tester</label>
+                <select name="tester" id="tester">
+                    <option value="1">Tester One</option>
+                </select><br>
 
                 <a href="{{url_for('home')}}" class="custom_btn">Back(Home)</a>
                 <input type="submit" value="Create Site" class="custom_btn">
