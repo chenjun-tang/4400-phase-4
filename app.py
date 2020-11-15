@@ -3,6 +3,7 @@ import os
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 
+# screen 1
 @app.route("/", methods=['GET', 'POST'])
 def index():
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
@@ -16,6 +17,7 @@ def index():
             return redirect(url_for("home"))
     return render_template("index.html")
 
+# screen 2 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     # do the similar as the function above 
@@ -23,6 +25,7 @@ def register():
     
     return render_template('register.html')
 
+# screen 3
 @app.route("/home", methods=['GET', 'POST'])
 def home():
     user_type = "Student"
@@ -32,33 +35,25 @@ def home():
     user_type = "Lab Technician/Tester"
     return render_template("home.html", user_type = user_type)
 
+# screen 4
 @app.route("/student_test_results")
 def student_test_results():
     return render_template("student_test_results.html")
 
-@app.route("/aggregate_results")
-def aggregate_results():
-    return render_template("aggregate_results.html")
-
+#  screen 5
 @app.route("/explore_test_result")
 def explore_test_result():
     return render_template("explore_test_result.html")
 
+#  screen 6
+@app.route("/aggregate_results")
+def aggregate_results():
+    return render_template("aggregate_results.html")
+
+#  screen 7
 @app.route("/sign_up")
 def sign_up():
     return render_template("sign_up.html")
-
-@app.route("/create_appointment")
-def create_appointment():
-    return render_template("create_appointment.html")
-
-@app.route("/create_testing_site")
-def create_testing_site():
-    return render_template("create_testing_site.html")
-
-@app.route("/daily_results")
-def daily_results():
-    return render_template("daily_results.html")
 
 #screen 8
 @app.route("/labtech_tests_processed",methods=['GET', 'POST'])
@@ -70,7 +65,7 @@ def labtech_tests_processed():
     }
     return render_template("labtech_tests_processed.html", data_dict=data)
 
-#screen9
+#screen 9
 @app.route("/view_pools", methods=['GET', 'POST'])
 def view_pools():
     data = {
@@ -79,7 +74,12 @@ def view_pools():
     }
     return render_template("view_pools.html",data_dict=data)
 
-#screen11
+# screen 10
+@app.route("/create_pool")
+def create_pool():
+    return render_template("create_pool.html")
+
+#screen 11
 @app.route("/process_pool", methods=["GET", "POST"])
 def process_pool():
     pool_id = 1234
@@ -89,9 +89,21 @@ def process_pool():
     }
     return render_template("process_pool.html", pool_id = pool_id, data_dict=data)
 
+# screen 12
+@app.route("/create_appointment")
+def create_appointment():
+    return render_template("create_appointment.html")
 
 
+# screen 15
+@app.route("/create_testing_site")
+def create_testing_site():
+    return render_template("create_testing_site.html")
 
+# screen 18
+@app.route("/daily_results")
+def daily_results():
+    return render_template("daily_results.html")
 
 
 
