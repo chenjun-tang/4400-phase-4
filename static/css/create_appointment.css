@@ -1,3 +1,22 @@
 .content {
     width: 550px;
 }
+
+.content label {
+    display: inline-block;
+    width: 50px;
+    height: 30px;
+    line-height: 30px;    
+    font-size: 16px;
+    margin-top: 10px;    
+    margin-bottom: 10px;
+    text-align: right;
+}
+
+.content input, .content select{
+    width: 150px;
+    height: 30px;
+    border: 1px solid #dee0e4;
+    box-sizing: border-box;
+    padding: 0 15px;
+}
