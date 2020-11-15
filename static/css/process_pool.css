@@ -1,0 +1,51 @@
+.content {
+    height: 400px;
+    width: 1000px;
+}
+
+table.gridtable {
+    position: relative;
+    top: 60%;
+    left: 15%; 
+}
+
+
+.negativeTable {
+    display: none;
+}
+
+.content label {
+    display: inline-block;
+    width: 150px;
+    height: 30px;
+    line-height: 30px;    
+    font-size: 16px;
+    margin-top: 10px;    
+    margin-bottom: 10px;
+    text-align: right;
+}
+
+
+
+.content .switch{
+    border: 0;   
+    float: center; 
+    position: relative;
+    width: 40%;
+    height: 40px;
+    background: #fff;
+    text-align: center;
+    font-size: 16px;
+    line-height: 40px;
+    font-style: normal;
+}
+
+.content .active {    
+    background:  #3274d6;
+    color: #fff;
+}
+
+.content select {
+    font-size: 16px;
+    border: 1px solid #5b6574;
+}

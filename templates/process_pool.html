@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Pool</title>    
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/process_pool.css">
+</head>
+<body>
+    <div class="page">
+        <div class="content">
+            <h1>Process Pool</h1>
+            <form action="">
+                <label for="">Pool ID:</label>
+                <span id="pool_id">{{pool_id}}</span></input></li><br>
+
+                <label for="">Date Processed:</label>
+                <input id="start_date" type="date"><br>
+
+                <label for="pool_status">Pool Status:</label>
+                <button id="posBtn" type="button" class="switch active">Positive</button>
+                <button id="negBtn" type="button" class="switch">Negative</button>
+                
+                    
+                <div class="positiveTable" id="positiveTable">
+                    <table class="gridtable" >
+                        <tr>
+                            <th>Test ID#</th>
+                            <th>Date Tested</th>
+                            <th>Test Result</th>
+                        </tr>
+                        {% for k,v in data_dict.items() %}
+                        <tr>
+                            <td> {{v[0]}} </td>
+                            <td> {{v[1]}} </td>
+                            <td> 
+                                <select name="pool_status">            
+                                    <option value="positive">Positive</option>
+                                    <option value="negative">Negative</option>
+                                </select> 
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                
+                <div class="negativeTable" id="negativeTable" style="display:none"> 
+                    <table class="gridtable" >
+                        <tr>
+                            <th>Test ID#</th>
+                            <th>Date Tested</th>
+                            <th>Test Result</th>
+                        </tr>
+                        {% for k,v in data_dict.items() %}
+                        <tr>
+                            <td> {{v[0]}} </td>
+                            <td> {{v[1]}} </td>
+                            <td> {{v[2]}} </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    
+                </div>
+               
+
+
+                
+                <a href="{{url_for('home')}}" class="custom_btn">Back(Home)</a>
+                <input type="submit" value="Process Pool" class="custom_btn">
+                
+            </form>
+        </div>
+    </div>
+    <script src="../static/js/process_pool.js"></script>
+</body>
+</html>

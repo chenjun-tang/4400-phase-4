@@ -70,6 +70,7 @@ def labtech_tests_processed():
     }
     return render_template("labtech_tests_processed.html", data_dict=data)
 
+#screen9
 @app.route("/view_pools", methods=['GET', 'POST'])
 def view_pools():
     data = {
@@ -77,6 +78,20 @@ def view_pools():
         2:['2332', '4,5,6','8/17/20','jim456','Negative'],
     }
     return render_template("view_pools.html",data_dict=data)
+
+#screen11
+@app.route("/process_pool", methods=["GET", "POST"])
+def process_pool():
+    pool_id = 1234
+    data = {
+        1:['1','8/17/20','Negative'],
+        2:['2','8/19/20','Negatve'],
+    }
+    return render_template("process_pool.html", pool_id = pool_id, data_dict=data)
+
+
+
+
 
 
 
