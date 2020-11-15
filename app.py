@@ -6,6 +6,24 @@ from hashlib import md5
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 
+mysql = MySQL()
+app.config['MYSQL_DATABASE_USER'] = 'root'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
+app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+mysql.init_app(app)
+
+conn = mysql.connect()
+cursor =conn.cursor()
+
+exec_sql_file(cursor, './db_init.sql')
+#cursor.execute("SELECT * FROM STUDENT")
+#data = cursor.fetchall()
+#print(data)
+exec_proc_file(cursor, './db_procedure.sql')
+#cursor.callproc('view_testers')
+#cursor.execute("SELECT * FROM view_testers_result")
+#data = cursor.fetchall()
+#print(data)
 
 # screen 1
 @app.route("/", methods=['GET', 'POST'])
@@ -21,10 +39,10 @@ def index():
             return redirect(url_for("home"))
     return render_template("index.html")
 
-# screen 2 
+# screen 2
 @app.route("/register", methods=['GET', 'POST'])
 def register():
-    # do the similar as the function above 
+    # do the similar as the function above
     if request.method == 'POST':
         print(request.form)
         username = request.form['username']
