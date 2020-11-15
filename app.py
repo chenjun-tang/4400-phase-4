@@ -60,5 +60,16 @@ def create_testing_site():
 def daily_results():
     return render_template("daily_results.html")
 
+#screen 8
+@app.route("/labtech_tests_processed",methods=['GET', 'POST'])
+def labtech_tests_processed():
+    # simulate the data
+    data = {
+        1:['1', '22332','8/17/20','8/29/20','Negative'],
+        2:['1', '22332','8/17/20','8/29/20','Negative'],
+    }
+    return render_template("labtech_tests_processed.html", data_dict=data)
+
+
 if __name__ == '__main__':
     app.run(debug=True)

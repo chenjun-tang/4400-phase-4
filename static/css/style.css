@@ -84,3 +84,28 @@ h1 {
     box-sizing: border-box;
     padding: 0 15px;
 }
+
+table.gridtable {
+    font-size:14px;
+    color:#333333;
+    border-width: 1px;
+    border-color: #666666;
+    border-collapse: collapse;
+    position: relative;
+    top: 50%;
+    left: 15%; 
+}
+table.gridtable th {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #666666;
+    background-color: #dedede;
+}
+table.gridtable td {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #666666;
+    background-color: #ffffff;
+}
