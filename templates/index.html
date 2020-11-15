@@ -18,9 +18,10 @@
     
                 <label for="password"><i class="fas fa-lock"></i></label>
                 <input type="password" name="password" id="password" placeholder="Password" required>
+
+                <div style="color: red;">{{ msg }}</div>
                 
-                <label for="login" class="login_btn">Login</label>
-				<input type="submit" id="login" style="display: none;">
+				<input type="submit" id="login" class="login_btn" value="Login">
 				<a href="{{ url_for('register')}}" class="login_btn">Register</a>
             </form>
         </div>

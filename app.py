@@ -6,20 +6,46 @@ from hashlib import md5
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 
+mysql = MySQL()
+app.config['MYSQL_DATABASE_USER'] = 'root'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
+#app.config['MYSQL_DATABASE_DB'] = 'Database'
+app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+mysql.init_app(app)
+
+conn = mysql.connect()
+cursor =conn.cursor()
+
+exec_sql_file(cursor, './db_init.sql')
+#cursor.execute("SELECT * FROM STUDENT")
+#data = cursor.fetchall()
+#print(data)
+exec_proc_file(cursor, './db_procedure.sql')
+#cursor.callproc('view_testers')
+#cursor.execute("SELECT * FROM view_testers_result")
+#data = cursor.fetchall()
+#print(data)
+
 
 # screen 1
 @app.route("/", methods=['GET', 'POST'])
 def index():
+    line = ""
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
-        password = md5(request.form['password'].encode('utf-8'))
-        # print(username)
+        password = md5(request.form['password'].encode('utf-8')).hexdigest()
 
+        # Check if account exists using MySQL
+        cursor.execute('SELECT * FROM user WHERE username = %s AND user_password = %s', (username, password))
+        account = cursor.fetchone()
         # we can now get the username and password here
         # after checking, we need to find the user type and redirect to home
-        if True:
+        if account:
             return redirect(url_for("home"))
-    return render_template("index.html")
+        else:
+            line = "Incorrect username/password!"
+
+    return render_template("index.html", msg=line)
 
 # screen 2 
 @app.route("/register", methods=['GET', 'POST'])
