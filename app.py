@@ -69,9 +69,26 @@ def register():
         email = request.form['email']
         fname = request.form['fname']
         lname = request.form['lname']
-        password = md5(request.form['password'].encode('utf-8'))
-        if "lab_tech" in request.form:
-            print("lab_tech")
+        password = md5(request.form['password'].encode('utf-8')).hexdigest()
+
+        if "lab_tech" not in request.form and "site_tester" not in request.form:
+            house_type = request.form['housing_type']
+            location = request.form['location']
+            cursor.execute('CALL register_student(%s,%s,%s,%s,%s,%s,%s)',(username, email, fname, lname, location, house_type, password))
+            return redirect(url_for("home", user_type='Student', user_name=username))
+
+        else:
+            phone = request.form['phone']
+            labtech = "lab_tech" in request.form
+            tester = "site_tester" in request.form
+            cursor.execute('CALL register_employee(%s,%s,%s,%s,%s,%s,%s,%s)',(username, email, fname, lname, phone, labtech, tester, password))
+            if labtech and tester:
+                return redirect(url_for("home", user_type='Lab Technician/Tester', user_name=username))
+            elif labtech:
+                return redirect(url_for("home", user_type='Lab Technician', user_name=username))
+            elif tester:
+                return redirect(url_for("home", user_type='Tester', user_name=username))
+            
     return render_template('register.html')
 
 # screen 3
@@ -165,6 +182,15 @@ def process_pool():
 def create_appointment():
     return render_template("create_appointment.html")
 
+# screen 13
+@app.route("/view_appointments")
+def view_appointments():
+    return render_template("view_appointments.html")
+
+# screen 14
+@app.route("/reassign_tester")
+def reassign_tester():
+    return render_template("reassign_tester.html")
 
 # screen 15
 @app.route("/create_testing_site")
