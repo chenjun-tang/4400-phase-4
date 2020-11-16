@@ -102,8 +102,7 @@ def student_test_results():
         endDate = request.form["endDate"]
         if endDate == '':
             endDate = None
-        # sql = 'call student_view_results(%s, %s, %s, %s)', (student_name,status, startDate, endDate)
-        # print(sql)
+
         search_count = cursor.execute('call student_view_results(%s, %s, %s, %s)', (student_name,status, startDate, endDate))
         cursor.execute('select * from student_view_results_result')
         data = cursor.fetchall()
@@ -114,7 +113,21 @@ def student_test_results():
 #  screen 5
 @app.route("/explore_test_result")
 def explore_test_result():
-    return render_template("explore_test_result.html")
+    user_type=''
+    user_name=''
+    test_id = None
+    data = {}
+    if request.method == 'GET':
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+        test_id = request.args.get('test_id')
+        if test_id != None:
+            cursor.execute('call explore_results(%s)',(test_id))
+            cursor.execute('select * from explore_results_result')
+            data = cursor.fetchone()
+            return render_template("explore_test_result.html", user_type = user_type, user_name = user_name, data = data)
+    return render_template("explore_test_result.html", user_type = user_type, user_name = user_name, data = data)
+
 
 #  screen 6
 @app.route("/aggregate_results")

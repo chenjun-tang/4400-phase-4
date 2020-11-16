@@ -35,7 +35,7 @@
                     </tr>
                     {% for v in data_dict %}
                     <tr>
-                        <td> {{v[0]}} </td>
+                        <td> <a href="{{ url_for('explore_test_result', user_type='Student', user_name=user_name, test_id=v[0])}}" style="text-decoration:underline;">{{v[0]}}</a> </td>
                         <td> {{v[1]}} </td>
                         <td> {{v[2]}} </td>
                         <td> {{v[3]}} </td>
@@ -44,7 +44,7 @@
                     {% endfor %}
                 </table>
 
-                <a href="{{url_for('home')}}" class="custom_btn">Back(Home)</a>
+                <a href="{{url_for('home', user_type='Student', user_name=user_name)}}" class="custom_btn">Back(Home)</a>
                 <input type="submit" value="Filter" class="custom_btn">
                 <input type="reset" value="Reset" class="custom_btn">
 
