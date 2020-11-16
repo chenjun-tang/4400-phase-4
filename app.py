@@ -15,12 +15,12 @@ mysql.init_app(app)
 
 conn = mysql.connect()
 cursor =conn.cursor()
-
-exec_sql_file(cursor, './db_init.sql')
+cursor.execute("use covidtest_fall2020")
+# exec_sql_file(cursor, './db_init.sql')
 #cursor.execute("SELECT * FROM STUDENT")
 #data = cursor.fetchall()
 #print(data)
-exec_proc_file(cursor, './db_procedure.sql')
+# exec_proc_file(cursor, './db_procedure.sql')
 #cursor.callproc('view_testers')
 #cursor.execute("SELECT * FROM view_testers_result")
 #data = cursor.fetchall()
@@ -40,8 +40,20 @@ def index():
         account = cursor.fetchone()
         # we can now get the username and password here
         # after checking, we need to find the user type and redirect to home
-        if account:
-            return redirect(url_for("home"))
+        is_student = cursor.execute('SELECT * FROM student WHERE student_username = %s',(username))
+        if is_student:
+            return redirect(url_for("home", user_type='Student', user_name=username))
+        is_admin = cursor.execute('SELECT * FROM administrator WHERE admin_username = %s',(username))
+        if is_admin:
+            return redirect(url_for("home", user_type='Admin', user_name=username))
+        is_labtech = cursor.execute('SELECT * FROM labtech WHERE labtech_username = %s',(username))
+        is_sitetester = cursor.execute('SELECT * FROM sitetester WHERE sitetester_username = %s',(username))
+        if is_labtech==1 and is_sitetester==1:
+            return redirect(url_for("home", user_type='Lab Technician/Tester', user_name=username))
+        elif is_labtech==1 and is_sitetester == 0:
+            return redirect(url_for("home", user_type='Lab Technician', user_name=username))
+        elif is_labtech ==0 and is_sitetester==1: 
+            return redirect(url_for("home", user_type='Tester', user_name=username))
         else:
             line = "Incorrect username/password!"
 
@@ -65,17 +77,39 @@ def register():
 # screen 3
 @app.route("/home", methods=['GET', 'POST'])
 def home():
-    user_type = "Student"
-    # user_type = "Tester"
-    # user_type = "Admin"
-    # user_type = "Lab Technician"
-    # user_type = "Lab Technician/Tester"
-    return render_template("home.html", user_type = user_type)
+    user_type = ""
+    user_name = ""
+    if request.method == 'GET':
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+
+    return render_template("home.html", user_type = user_type, user_name = user_name)
 
 # screen 4
-@app.route("/student_test_results")
+@app.route("/student_test_results", methods=['GET','POST'])
 def student_test_results():
-    return render_template("student_test_results.html")
+    data = ()
+    student_name = '' # to get student_name 
+    if request.method == 'GET':
+        student_name = request.args.get('user_name')
+   
+    if request.method == 'POST':
+        student_name = request.form['student_name']
+        status = request.form["status"]
+        startDate = request.form["startDate"]
+        if startDate == '':
+            startDate = None
+        endDate = request.form["endDate"]
+        if endDate == '':
+            endDate = None
+        # sql = 'call student_view_results(%s, %s, %s, %s)', (student_name,status, startDate, endDate)
+        # print(sql)
+        search_count = cursor.execute('call student_view_results(%s, %s, %s, %s)', (student_name,status, startDate, endDate))
+        cursor.execute('select * from student_view_results_result')
+        data = cursor.fetchall()
+        return render_template("student_test_results.html", data_dict = data, user_name = student_name)
+
+    return render_template("student_test_results.html", data_dict = data, user_name=student_name)
 
 #  screen 5
 @app.route("/explore_test_result")
