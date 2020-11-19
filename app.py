@@ -9,22 +9,12 @@ app = Flask(__name__, template_folder="templates", static_folder="static")
 mysql = MySQL()
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
-#app.config['MYSQL_DATABASE_DB'] = 'Database'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
 conn = mysql.connect()
 cursor =conn.cursor()
 cursor.execute("use covidtest_fall2020")
-# exec_sql_file(cursor, './db_init.sql')
-#cursor.execute("SELECT * FROM STUDENT")
-#data = cursor.fetchall()
-#print(data)
-# exec_proc_file(cursor, './db_procedure.sql')
-#cursor.callproc('view_testers')
-#cursor.execute("SELECT * FROM view_testers_result")
-#data = cursor.fetchall()
-#print(data)
 
 
 # screen 1
@@ -99,7 +89,6 @@ def home():
     if request.method == 'GET':
         user_type = request.args.get('user_type')
         user_name = request.args.get('user_name')
-
     return render_template("home.html", user_type = user_type, user_name = user_name)
 
 # screen 4
@@ -149,12 +138,15 @@ def explore_test_result():
 #  screen 6
 @app.route("/aggregate_results")
 def aggregate_results():
-    return render_template("aggregate_results.html")
+    if request.method == 'GET':
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+    return render_template("aggregate_results.html", user_type = user_type, user_name = user_name)
 
 #  screen 7
 @app.route("/sign_up")
-def sign_up():    
-    user_name=''
+def sign_up(): 
+    user_name = request.args.get('user_name')
     return render_template("sign_up.html", user_name = user_name)
 
 #screen 8
@@ -224,7 +216,9 @@ def change_testing_site():
 # screen 18
 @app.route("/daily_results")
 def daily_results():
-    return render_template("daily_results.html")
+    user_type = request.args.get('user_type')
+    user_name = request.args.get('user_name')
+    return render_template("daily_results.html", user_type=user_type, user_name=user_name)
 
 
 
