@@ -25,7 +25,7 @@
                 <input id="start_time" type="time"> -
                 <input id="end_time" type="time"><br>
 
-                <a href="{{url_for('home')}}" class="custom_btn">Back(Home)</a>
+                <a href="{{url_for('home', user_type='Student', user_name=user_name)}}" class="custom_btn">Back(Home)</a>
                 <input type="reset" value="Reset" class="custom_btn">
                 <input type="submit" value="Signup" class="custom_btn">
 

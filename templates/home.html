@@ -13,7 +13,7 @@
             <h1>{{user_type}} Home</h1>
             {% if user_type == "Student"%}
                 <a href="{{url_for('student_test_results', user_name=user_name)}}">View My Results</a>
-                <a href="{{url_for('sign_up')}}">Sign Up for a Test</a>
+                <a href="{{url_for('sign_up', user_name=user_name)}}">Sign Up for a Test</a>
 
             {% elif user_type == "Tester"%}
                 <a href="{{url_for('change_testing_site')}}">Change Testing Site</a>

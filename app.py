@@ -153,8 +153,9 @@ def aggregate_results():
 
 #  screen 7
 @app.route("/sign_up")
-def sign_up():
-    return render_template("sign_up.html")
+def sign_up():    
+    user_name=''
+    return render_template("sign_up.html", user_name = user_name)
 
 #screen 8
 @app.route("/labtech_tests_processed",methods=['GET', 'POST'])
