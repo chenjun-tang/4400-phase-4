@@ -18,6 +18,14 @@
                     <th>Positive Count</th>
                     <th>Positive Percent</th>
                 </tr>
+                {% for v in data%}
+                    <tr>
+                        <td> {{v[0]}} </td>
+                        <td> {{v[1]}} </td>
+                        <td> {{v[2]}} </td>
+                        <td> {{v[3]}}% </td>                        
+                    </tr>
+                {% endfor %}
             </table>
             <a href="{{url_for('home', user_type=user_type, user_name=user_name)}}" class="custom_btn">Back(Home)</a>
         </div>

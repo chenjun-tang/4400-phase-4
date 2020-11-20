@@ -239,7 +239,10 @@ def change_testing_site():
 def daily_results():
     user_type = request.args.get('user_type')
     user_name = request.args.get('user_name')
-    return render_template("daily_results.html", user_type=user_type, user_name=user_name)
+    cursor.execute('call daily_results();')
+    cursor.execute('SELECT * FROM daily_results_result;')
+    data = cursor.fetchall()
+    return render_template("daily_results.html", user_type=user_type, user_name=user_name, data=data)
 
 
 
