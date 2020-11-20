@@ -2,6 +2,18 @@
     width: 700px;
 }
 
+.content form label {
+    display: inline;
+}
+
+.content form input, .content form select {
+    border: 1px solid #dee0e4;
+}
+
 .content form .custom_btn {
     width: 150px;
+}
+
+.gridtable {
+    width: 600px;
 }

@@ -167,8 +167,10 @@ def aggregate_results():
 #  screen 7
 @app.route("/sign_up")
 def sign_up(): 
-    user_name = request.args.get('user_name')
-    return render_template("sign_up.html", user_name = user_name)
+    user_name = request.args.get('user_name')    
+    cursor.execute('select * from site')
+    sites = cursor.fetchall()
+    return render_template("sign_up.html", user_name = user_name, sites=sites)
 
 #screen 8
 @app.route("/labtech_tests_processed",methods=['GET', 'POST'])
@@ -207,7 +209,9 @@ def process_pool():
 # screen 12
 @app.route("/create_appointment")
 def create_appointment():
-    return render_template("create_appointment.html")
+    cursor.execute('select * from site')
+    sites = cursor.fetchall()
+    return render_template("create_appointment.html", sites=sites)
 
 # screen 13
 @app.route("/view_appointments")
@@ -243,7 +247,6 @@ def daily_results():
     cursor.execute('SELECT * FROM daily_results_result;')
     data = cursor.fetchall()
     return render_template("daily_results.html", user_type=user_type, user_name=user_name, data=data)
-
 
 
 if __name__ == '__main__':
