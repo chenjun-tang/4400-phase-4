@@ -11,7 +11,7 @@
     <div class="page">
         <div class="content">
             <h1>Aggregate Test Results</h1>
-            <form action="">
+            <form action="url_for('aggregate_results', user_type = user_type, user_name = user_name, data=data, sites=sites)" method="POST">
                 <label for="location">Location:</label>
                 <select name="location">
                     <option value="all">All</option>
@@ -21,20 +21,38 @@
 
                 <label for="housing_type">Housing:</label>
                 <select name="housing_type">            
-                    <option value="off_campus">Off-Campus House</option>
-                    <option value="off_campus">Off-Campus Appartment</option>
+                    <option value="off_campus_house">Off-Campus House</option>
+                    <option value="off_campus_apart">Off-Campus Appartment</option>
                     <option value="greek">Greek Housing</option>
-                    <option value="greek">Student Housing</option>
+                    <option value="student">Student Housing</option>
                 </select>
 
                 <label for="testing_site">Testing Site:</label>
-                <select name="testing_site">            
-                    <option value="all">All</option>
+                <select name="testing_site"> 
+                    <option value="Null">-Select-</option>           
+                    {% for s in sites%}
+                    <option value="s[0]">{{s[0]}}</option>                    
+                    {% endfor %}
                 </select><br>
 
                 <label for="">Date Processed</label>
                 <input id="start_date" type="date"> -
                 <input id="end_date" type="date"><br>
+
+                <table class="gridtable">
+                    <tr>
+                        <th>Total</th>
+                        <th>{{data[0][1] + data[1][1] + data[2][1]}}</th>
+                        <th>100%</th>
+                    </tr>
+                    {% for v in data%}
+                    <tr>
+                        <td style="text-transform: capitalize;"> {{v[0]}} </td>
+                        <td> {{v[1]}} </td>
+                        <td> {{v[2]}}%</td>
+                    </tr>
+                    {% endfor %}
+                </table>
                 
                 
                 <a href="{{url_for('home', user_type=user_type, user_name=user_name)}}" class="custom_btn">Back(Home)</a>

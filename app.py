@@ -137,11 +137,28 @@ def explore_test_result():
 
 #  screen 6
 @app.route("/aggregate_results")
-def aggregate_results():
+def aggregate_results():    
+    cursor.execute('select * from site')
+    sites = cursor.fetchall()
     if request.method == 'GET':
         user_type = request.args.get('user_type')
         user_name = request.args.get('user_name')
-    return render_template("aggregate_results.html", user_type = user_type, user_name = user_name)
+        cursor.execute('call aggregate_results("East",null,null,null,null);')
+        cursor.execute('select * from aggregate_results_result')
+        data = cursor.fetchall()
+
+    elif request.method == 'POST':
+        location = request.form['location']
+        housing_type = request.form['housing_type']
+        testing_site = request.form['testing_site']
+        start_date = request.form['start_date']
+        end_date = request.form['end_date']
+        print(location, housing_type, testing_site,start_date,end_date)
+        cursor.execute('call aggregate_results(%s,%s,%s,%s,%s);',(location, housing_type, testing_site,start_date,end_date))
+        cursor.execute('select * from aggregate_results_result')
+        data = cursor.fetchall()
+
+    return render_template("aggregate_results.html", user_type = user_type, user_name = user_name, data=data, sites=sites)
 
 #  screen 7
 @app.route("/sign_up")
