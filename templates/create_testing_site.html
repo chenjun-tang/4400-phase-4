@@ -33,8 +33,7 @@
                     {% for state in states %}
                     <option value="{{state}}">{{state}}</option>
                     {% endfor %}
-                </select>
-                <br>
+                </select><br>
                 
                 <label for="zip">Zip Code</label>
                 <input type="text" name="zip" id="zip">
@@ -51,8 +50,10 @@
                     <option value="1">Tester One</option>
                 </select><br>
 
-                <a href="{{url_for('home')}}" class="custom_btn">Back(Home)</a>
-                <input type="submit" value="Create Site" class="custom_btn">
+                <div class="buttons">
+                    <a href="{{url_for('home')}}" class="custom_btn">Back(Home)</a>
+                    <input type="submit" value="Create Site" class="custom_btn">    
+                </div>                
             </form>
         </div>
     </div>

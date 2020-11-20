@@ -1,7 +1,23 @@
 .content {
     width: 550px;
+    text-align: left;
+}
+
+.content form label {
+    width: 120px;
+    margin-left: 20px;
 }
 
 .content form .custom_btn {
     width: 150px;
+}
+
+.content form select {
+    height: 30px;
+    border: 1px solid rgb(118, 118, 118);
+}
+
+.content form .buttons {
+    width: 100%;
+    text-align: center;
 }
