@@ -11,7 +11,7 @@
     <div class="page">
         <div class="content">
             <h1>Aggregate Test Results</h1>
-            <form action="url_for('aggregate_results', user_type = user_type, user_name = user_name, data=data, sites=sites)" method="POST">
+            <form action="{{url_for('aggregate_results')}}" method="POST">
                 <label for="location">Location:</label>
                 <select name="location">
                     <option value="all">All</option>
@@ -36,8 +36,8 @@
                 </select><br>
 
                 <label for="">Date Processed</label>
-                <input id="start_date" type="date"> -
-                <input id="end_date" type="date"><br>
+                <input name="start_date" id="start_date" type="date"> -
+                <input name="end_date" id="end_date" type="date"><br>
 
                 <table class="gridtable">
                     <tr>
