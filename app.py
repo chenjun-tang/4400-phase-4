@@ -215,8 +215,10 @@ def create_appointment():
 
 # screen 13
 @app.route("/view_appointments")
-def view_appointments():
-    return render_template("view_appointments.html")
+def view_appointments():    
+    cursor.execute('select * from site')
+    sites = cursor.fetchall()
+    return render_template("view_appointments.html", sites=sites)
 
 # screen 14
 @app.route("/reassign_tester")

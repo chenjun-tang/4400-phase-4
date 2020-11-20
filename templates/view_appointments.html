@@ -13,8 +13,9 @@
             <h1>View Appointments</h1>
             <label for="site">Testing Site</label>
             <select name="site" id="site">
-                <option value="all">All</option>
-                <option value="Stamps">Stamps</option>
+                {% for s in sites %}
+                <option value="{{s[0]}}">{{s[0]}}</option>
+                {% endfor %}
             </select>
 
             <label for="date">Date</label>
