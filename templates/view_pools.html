@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Pools</title>    
+    <title>View Pools</title>
     <link rel="stylesheet" href="../static/css/style.css">
     <link rel="stylesheet" href="../static/css/view_pools.css">
 </head>
@@ -11,14 +11,14 @@
     <div class="page">
         <div class="content">
             <h1>View Pools</h1>
-            <form action="">
+            <form action="{{ url_for('view_pools') }}" method="POST">
 
                 <label for="">Date Tested:</label>
-                <input id="start_date" type="date"> -
-                <input id="end_date" type="date"><br>
+                <input id="start_date" name="start_date" type="date"> -
+                <input id="end_date" name="end_date" type="date"><br>
 
                 <label for="pool_status">Pool Status:</label>
-                <select name="pool_status">            
+                <select name="pool_status">
                     <option value="all">All</option>
                     <option value="positive">Positive</option>
                     <option value="negative">Negative</option>
@@ -35,7 +35,7 @@
                         <th>Processed By</th>
                         <th>Pool Status</th>
                     </tr>
-                    {% for k,v in data_dict.items() %}
+                    {% for v in data %}
                     <tr>
                         <td> {{v[0]}} </td>
                         <td> {{v[1]}} </td>
@@ -46,14 +46,14 @@
                     {% endfor %}
                 </table>
 
-                
+
                 <a href="{{url_for('home')}}" class="custom_btn">Back(Home)</a>
                 <input type="reset" value="Reset" class="custom_btn">
                 <input type="submit" value="Filter" class="custom_btn">
-                
+
             </form>
         </div>
     </div>
-    
+
 </body>
 </html>

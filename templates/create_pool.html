@@ -11,9 +11,9 @@
     <div class="page">
         <div class="content">
             <h1>Create a Pool</h1>
-            <form action="">
+            <form action="{{ url_for('create_pool') }}" method="POST">
                 <label for="pool_id">Pool ID:</label>
-                <input type="text" name="" id="pool_id">
+                <input type="text" name="pool_id" id="pool_id">
 
                 <table class="gridtable" >
                     <tr>
@@ -21,6 +21,13 @@
                         <th>Date Tested</th>
                         <th>Include in Pool</th>
                     </tr>
+                    {% for v in data%}
+                        <tr>
+                            <td> {{v[0]}} </td>
+                            <td> {{v[1]}} </td>
+                            <td>  <input type="checkbox" name="{{v[0]}}"> </td>
+                        </tr>
+                    {% endfor %}
                 </table>
 
                 <a href="{{url_for('home')}}" class="custom_btn">Back(Home)</a>

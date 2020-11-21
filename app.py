@@ -14,8 +14,9 @@ mysql.init_app(app)
 
 conn = mysql.connect()
 cursor =conn.cursor()
-cursor.execute("use covidtest_fall2020")
-
+#cursor.execute("use covidtest_fall2020")
+exec_sql_file(cursor, './db_init.sql')
+exec_proc_file(cursor, './db_procedure.sql')
 
 # screen 1
 @app.route("/", methods=['GET', 'POST'])
@@ -42,17 +43,17 @@ def index():
             return redirect(url_for("home", user_type='Lab Technician/Tester', user_name=username))
         elif is_labtech==1 and is_sitetester == 0:
             return redirect(url_for("home", user_type='Lab Technician', user_name=username))
-        elif is_labtech ==0 and is_sitetester==1: 
+        elif is_labtech ==0 and is_sitetester==1:
             return redirect(url_for("home", user_type='Tester', user_name=username))
         else:
             line = "Incorrect username/password!"
 
     return render_template("index.html", msg=line)
 
-# screen 2 
+# screen 2
 @app.route("/register", methods=['GET', 'POST'])
 def register():
-    # do the similar as the function above 
+    # do the similar as the function above
     if request.method == 'POST':
         print(request.form)
         username = request.form['username']
@@ -78,7 +79,7 @@ def register():
                 return redirect(url_for("home", user_type='Lab Technician', user_name=username))
             elif tester:
                 return redirect(url_for("home", user_type='Tester', user_name=username))
-            
+
     return render_template('register.html')
 
 # screen 3
@@ -95,7 +96,7 @@ def home():
 @app.route("/student_test_results", methods=['GET','POST'])
 def student_test_results():
     data = ()
-    student_name = '' # to get student_name 
+    student_name = '' # to get student_name
     if request.method == 'GET':
         student_name = request.args.get('user_name')
         search_count = cursor.execute('call student_view_results(%s, %s, %s, %s)', (student_name,None, None, None))
@@ -143,7 +144,7 @@ def explore_test_result():
 
 #  screen 6
 @app.route("/aggregate_results", methods=['GET','POST'])
-def aggregate_results():    
+def aggregate_results():
     user_type = ''
     user_name = ''
     data = []
@@ -155,7 +156,7 @@ def aggregate_results():
         cursor.execute('call aggregate_results(null,null,null,null,null);')
         cursor.execute('select * from aggregate_results_result')
         data = cursor.fetchall()
-        return render_template("aggregate_results.html", user_type = user_type, user_name = user_name, data=data, sites=sites)      
+        return render_template("aggregate_results.html", user_type = user_type, user_name = user_name, data=data, sites=sites)
 
     elif request.method == 'POST':
         user_type = request.form['user_type']
@@ -176,7 +177,7 @@ def aggregate_results():
         if len(end_date) == 0:
             end_date = None
         # print('call aggregate_results(%s,%s,%s,%s,%s);',(location, housing_type, testing_site,start_date,end_date))
-        
+
         cursor.execute('call aggregate_results(%s,%s,%s,%s,%s);',(location, housing_type, testing_site,start_date,end_date))
         cursor.execute('select * from aggregate_results_result')
         data = cursor.fetchall()
@@ -184,8 +185,8 @@ def aggregate_results():
 
 #  screen 7
 @app.route("/sign_up")
-def sign_up(): 
-    user_name = request.args.get('user_name')    
+def sign_up():
+    user_name = request.args.get('user_name')
     cursor.execute('select * from site')
     sites = cursor.fetchall()
     return render_template("sign_up.html", user_name = user_name, sites=sites)
@@ -203,20 +204,87 @@ def labtech_tests_processed():
 #screen 9
 @app.route("/view_pools", methods=['GET', 'POST'])
 def view_pools():
-    data = {
-        1:['23332', '1,2,3','8/17/20','jim123','Negative'],
-        2:['2332', '4,5,6','8/17/20','jim456','Negative'],
-    }
-    return render_template("view_pools.html",data_dict=data)
+    begin_process_date = ''
+    end_process_date = ''
+    pool_status = ''
+    processed_by = ''
+    data = []
+    if request.method == 'GET':
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+        print('111')
+        return render_template("view_pools.html",user_type = user_type, user_name = user_name, data=data)
+    elif request.method == 'POST':
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+        processed_by = request.form['processedBy']
+        begin_process_date = request.form['start_date']
+        end_process_date = request.form['end_date']
+        pool_status = request.form['pool_status']
+        if pool_status == 'All':
+            pool_status = None
+        if len(begin_process_date) == 0:
+            begin_process_date = None
+        if len(begin_process_date) == 0:
+            begin_process_date = None
+        cursor.execute('call view_pools(%s, %s, %s, %s)',(begin_process_date, end_process_date, pool_status, processed_by))
+        cursor.execute('select * from view_pools_result')
+        data = cursor.fetchall()
+        #print(data)
+        return render_template("view_pools.html",user_type = user_type, user_name = user_name, data=data)
+    return render_template("view_pools.html",user_type = user_type, user_name = user_name, data=data)
 
 # screen 10
-@app.route("/create_pool")
+@app.route("/create_pool", methods=['GET', 'POST'])
 def create_pool():
-    return render_template("create_pool.html")
+    user_type = ''
+    user_name = ''
+    pool_id = ''
+    cursor.execute('SELECT test_id, appt_date FROM TEST WHERE pool_id is null')
+    data = cursor.fetchall()
+    if request.method == 'GET':
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+    elif request.method == 'POST':
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+        pool_id = request.form['pool_id']
+        checkedIDs = []
+        for d in data:
+            ck = request.form.get(d[0])
+            if ck=='on':
+                checkedIDs.append(d[0])
+
+        if checkedIDs!=[]:
+            test_id = checkedIDs[0]
+            cursor.execute('call create_pool(%s,%s)',(pool_id, test_id))
+            for i in range(1, len(checkedIDs)):
+                test_id = checkedIDs[i]
+                cursor.execute('call assign_test_to_pool(%s,%s)',(pool_id, test_id))
+
+        # cursor.execute('SELECT test_id, appt_date FROM TEST WHERE pool_id = %s', (pool_id))
+        # data1 = cursor.fetchall()
+        # print(data1)
+
+    return render_template("create_pool.html",user_type = user_type, user_name = user_name, data=data)
 
 #screen 11
 @app.route("/process_pool", methods=["GET", "POST"])
 def process_pool():
+    # pool_id = ''
+    # pool_status = ''
+    # date = ''
+    # processed_by = ''
+    # if request.method == 'POST':
+    #     pool_id = request.form['pool_id']
+    #     pool_status = request.form['pool_status']
+    #     date = request.form['start_date']
+    #     processed_by = request.form['username']
+    #     cursor.execute('call process_pool(%s, %s, %s, %s)', (pool_id, pool_status, date, processed_by))
+    #
+    #     cursor.execute('select * from student_view_results_result')
+    #     data = cursor.fetchall()
+
     pool_id = 1234
     data = {
         1:['1','8/17/20','Negative'],
@@ -233,7 +301,7 @@ def create_appointment():
 
 # screen 13
 @app.route("/view_appointments")
-def view_appointments():    
+def view_appointments():
     cursor.execute('select * from site')
     sites = cursor.fetchall()
     return render_template("view_appointments.html", sites=sites)
