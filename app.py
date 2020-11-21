@@ -8,7 +8,7 @@ app = Flask(__name__, template_folder="templates", static_folder="static")
 
 mysql = MySQL()
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'sunzhimin'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
@@ -98,11 +98,17 @@ def student_test_results():
     student_name = '' # to get student_name 
     if request.method == 'GET':
         student_name = request.args.get('user_name')
-   
-    if request.method == 'POST':
+        search_count = cursor.execute('call student_view_results(%s, %s, %s, %s)', (student_name,None, None, None))
+        cursor.execute('select * from student_view_results_result')
+        data = cursor.fetchall()
+        return render_template("student_test_results.html", data_dict = data, user_name = student_name)
+
+    elif request.method == 'POST':
         student_name = request.form['student_name']
         status = request.form["status"]
         startDate = request.form["startDate"]
+        if status == 'All':
+            status = None
         if startDate == '':
             startDate = None
         endDate = request.form["endDate"]
@@ -152,16 +158,28 @@ def aggregate_results():
         return render_template("aggregate_results.html", user_type = user_type, user_name = user_name, data=data, sites=sites)      
 
     elif request.method == 'POST':
+        user_type = request.form['user_type']
+        user_name = request.form['user_name']
         location = request.form['location']
         housing_type = request.form['housing_type']
         testing_site = request.form['testing_site']
         start_date = request.form['start_date']
         end_date = request.form['end_date']
-        # print(location, housing_type, testing_site,start_date,end_date)
+        if location == 'All':
+            location = None
+        if housing_type == 'All':
+            housing_type = None
+        if testing_site == 'All':
+            testing_site = None
+        if len(start_date) == 0:
+            start_date = None
+        if len(end_date) == 0:
+            end_date = None
+        # print('call aggregate_results(%s,%s,%s,%s,%s);',(location, housing_type, testing_site,start_date,end_date))
+        
         cursor.execute('call aggregate_results(%s,%s,%s,%s,%s);',(location, housing_type, testing_site,start_date,end_date))
         cursor.execute('select * from aggregate_results_result')
         data = cursor.fetchall()
-        print(data)
         return render_template("aggregate_results.html", user_type = user_type, user_name = user_name, data=data, sites=sites)
 
 #  screen 7
