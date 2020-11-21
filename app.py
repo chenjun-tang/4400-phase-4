@@ -222,12 +222,12 @@ def view_pools():
         begin_process_date = request.form['start_date']
         end_process_date = request.form['end_date']
         pool_status = request.form['pool_status']
-        if pool_status == 'All':
+        if pool_status == 'all':
             pool_status = None
-        if len(begin_process_date) == 0:
+        if not begin_process_date or len(begin_process_date) == 0:
             begin_process_date = None
-        if len(begin_process_date) == 0:
-            begin_process_date = None
+        if not end_process_date or len(end_process_date) == 0:
+            end_process_date = None
         cursor.execute('call view_pools(%s, %s, %s, %s)',(begin_process_date, end_process_date, pool_status, processed_by))
         cursor.execute('select * from view_pools_result')
         data = cursor.fetchall()
@@ -311,7 +311,6 @@ def create_appointment():
     elif request.method == 'POST':
         user_type = request.args.get('user_type')
         user_name = request.args.get('user_name')
-        print("here")
         site = request.form['site']
         date = request.form['date']
         time = request.form['time']
@@ -326,9 +325,48 @@ def create_appointment():
 # screen 13
 @app.route("/view_appointments", methods=["GET", "POST"])
 def view_appointments():
+    user_type=''
+    user_name=''
     cursor.execute('select * from site')
     sites = cursor.fetchall()
-    return render_template("view_appointments.html", sites=sites)
+    site = ''
+    s_date = ''
+    e_date = ''
+    s_time = ''
+    e_time = ''
+    availablity = ''
+    data = []
+    if request.method == 'GET':
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+    elif request.method == 'POST':
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+        site = request.form['site']
+        s_date = request.form['start_date']
+        s_time = request.form['start_time']
+        e_date = request.form['end_date']
+        e_time = request.form['end_time']
+        availablity = request.form['availablity']
+        if availablity == 'all':
+            availablity = None
+        elif availablity == 'booked':
+            availablity = 0
+        else:
+            availablity = 1
+        if len(s_date) == 0:
+            s_date = None
+        if len(e_date) == 0:
+            e_date = None
+        if len(s_time) == 0:
+            s_time = None
+        if len(e_time) == 0:
+            e_time = None
+        cursor.execute('call view_appointments(%s, %s, %s, %s, %s, %s)',(site, s_date, e_date, s_time, e_time, availablity))
+        cursor.execute('select * from view_appointments_result')
+        data = cursor.fetchall()
+
+    return render_template("view_appointments.html", user_type = user_type, user_name = user_name, sites=sites, data=data)
 
 # screen 14
 @app.route("/reassign_tester")
