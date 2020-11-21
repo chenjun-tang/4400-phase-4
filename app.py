@@ -204,6 +204,8 @@ def labtech_tests_processed():
 #screen 9
 @app.route("/view_pools", methods=['GET', 'POST'])
 def view_pools():
+    user_type=''
+    user_name=''
     begin_process_date = ''
     end_process_date = ''
     pool_status = ''
@@ -212,7 +214,6 @@ def view_pools():
     if request.method == 'GET':
         user_type = request.args.get('user_type')
         user_name = request.args.get('user_name')
-        print('111')
         return render_template("view_pools.html",user_type = user_type, user_name = user_name, data=data)
     elif request.method == 'POST':
         user_type = request.args.get('user_type')
@@ -271,6 +272,8 @@ def create_pool():
 #screen 11
 @app.route("/process_pool", methods=["GET", "POST"])
 def process_pool():
+    # user_type=''
+    # user_name=''
     # pool_id = ''
     # pool_status = ''
     # date = ''
@@ -293,14 +296,35 @@ def process_pool():
     return render_template("process_pool.html", pool_id = pool_id, data_dict=data)
 
 # screen 12
-@app.route("/create_appointment")
+@app.route("/create_appointment", methods=["GET", "POST"])
 def create_appointment():
+    user_type=''
+    user_name=''
     cursor.execute('select * from site')
     sites = cursor.fetchall()
-    return render_template("create_appointment.html", sites=sites)
+    site = ''
+    date = ''
+    time = ''
+    if request.method == 'GET':
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+    elif request.method == 'POST':
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+        print("here")
+        site = request.form['site']
+        date = request.form['date']
+        time = request.form['time']
+        cursor.execute('call create_appointment(%s, %s, %s)',(site, date, time))
+
+        # cursor.execute('SELECT * FROM appointment WHERE site_name=%s and appt_date=%s and appt_time=%s', (site, date, time))
+        # data1 = cursor.fetchall()
+        # print(data1)
+
+    return render_template("create_appointment.html", user_type = user_type, user_name = user_name, sites=sites)
 
 # screen 13
-@app.route("/view_appointments")
+@app.route("/view_appointments", methods=["GET", "POST"])
 def view_appointments():
     cursor.execute('select * from site')
     sites = cursor.fetchall()

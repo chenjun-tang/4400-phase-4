@@ -11,23 +11,23 @@
     <div class="page">
         <div class="content">
             <h1>Create an Appointment</h1>
-            <form action="">                
+            <form action="{{ url_for('create_appointment') }}" method="POST">
                 <label for="site">Site</label>
                 <select name="site" id="site" required>
                     {% for s in sites%}
-                    <option value="{{s[0]}}">{{s[0]}}</option>                    
+                    <option value="{{s[0]}}">{{s[0]}}</option>
                     {% endfor %}
                 </select><br>
 
                 <label for="date">Date</label>
-                <input type="date" required><br>
+                <input type="date" name='date' required><br>
 
                 <label for="time">Time</label>
-                <input type="time" required>
+                <input type="time" name="time" required>
 
                 <input type="submit" id="submit" style="display: none;">
             </form>
-            <a href="{{url_for('home')}}" class="custom_btn">Back(Home)</a>
+            <a href="{{url_for('home', user_type=user_type, user_name=user_name)}}" class="custom_btn">Back(Home)</a>
             <label for="submit" class="custom_btn">Create Appointment</label>
         </div>
     </div>
