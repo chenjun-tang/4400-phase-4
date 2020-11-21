@@ -1,0 +1,22 @@
+.content {
+    width: 700px;
+}
+
+.content label {
+    display: inline;
+}
+
+.content input, .content select{
+    height: 30px;
+    border: 1px solid #dee0e4;
+    box-sizing: border-box;
+    padding: 0 15px;
+}
+
+.content form .gridtable {
+    width: 600px;
+}
+
+.content .custom_btn {
+    width: 150px;
+}

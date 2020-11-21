@@ -12,12 +12,12 @@
         <div class="content">
             <h1>{{user_type}} Home</h1>
             {% if user_type == "Student"%}
-                <a href="{{url_for('student_test_results')}}">View My Results</a>
-                <a href="{{url_for('sign_up')}}">Sign Up for a Test</a>
+                <a href="{{url_for('student_test_results', user_name=user_name)}}">View My Results</a>
+                <a href="{{url_for('sign_up', user_name=user_name)}}">Sign Up for a Test</a>
 
             {% elif user_type == "Tester"%}
-                <a href="#">Change Testing Site</a>
-                <a href="#">View Appointments</a>
+                <a href="{{url_for('change_testing_site')}}">Change Testing Site</a>
+                <a href="{{url_for('view_appointments')}}">View Appointments</a>
                 <a href="{{url_for('create_appointment')}}">Create Appointment</a>
 
             {% elif user_type == "Lab Technician"%}
@@ -28,8 +28,8 @@
                 <a href="{{url_for('view_pools')}}">View Pools</a>
             
             {% elif user_type == "Lab Technician/Tester"%}    
-                <a href="#">Change Testing Site</a>
-                <a href="#">View Appointments</a>
+                <a href="{{url_for('change_testing_site')}}">Change Testing Site</a>
+                <a href="{{url_for('view_appointments')}}">View Appointments</a>
                 <a href="{{url_for('create_appointment')}}">Create Appointment</a>
                 
                 <a href="{{url_for('process_pool')}}">Process Pool</a>
@@ -40,14 +40,14 @@
 
             
             {% elif user_type == "Admin"%}
-                <a href="#">Reassign Testers</a>
-                <a href="#">Create Testing Site</a>
-                <a href="#">Create Appointment</a>
-                <a href="#">View Appointments</a>    
+                <a href="{{url_for('reassign_tester')}}">Reassign Testers</a>
+                <a href="{{url_for('create_testing_site')}}">Create Testing Site</a>
+                <a href="{{url_for('create_appointment')}}">Create Appointment</a>
+                <a href="{{url_for('view_appointments')}}">View Appointments</a>    
             {% endif %}
             
-            <a href="{{url_for('aggregate_results')}}">View Aggregate Results</a>    
-            <a href="{{url_for('daily_results')}}">View Daily Results</a>
+            <a href="{{url_for('aggregate_results', user_type=user_type, user_name=user_name)}}">View Aggregate Results</a>    
+            <a href="{{url_for('daily_results', user_type=user_type, user_name=user_name)}}">View Daily Results</a>
         </div>
     </div>
     

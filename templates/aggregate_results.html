@@ -11,33 +11,62 @@
     <div class="page">
         <div class="content">
             <h1>Aggregate Test Results</h1>
-            <form action="">
+            <form action="{{url_for('aggregate_results')}}" method="POST">
                 <label for="location">Location:</label>
                 <select name="location">
-                    <option value="all">All</option>
+                    <option value="All">All</option>
                     <option value="east">East</option>
                     <option value="west">West</option>
                 </select>
 
                 <label for="housing_type">Housing:</label>
-                <select name="housing_type">            
-                    <option value="off_campus">Off-Campus House</option>
-                    <option value="off_campus">Off-Campus Appartment</option>
-                    <option value="greek">Greek Housing</option>
-                    <option value="greek">Student Housing</option>
+                <select name="housing_type">   
+                    <option value='All'>-All-</option>         
+                    <option value="Off-campus House">Off-Campus House</option>
+                    <option value="Off-campus Apartment">Off-Campus Appartment</option>
+                    <option value="Greek Housing">Greek Housing</option>
+                    <option value="Student Housing">Student Housing</option>
                 </select>
 
                 <label for="testing_site">Testing Site:</label>
-                <select name="testing_site">            
-                    <option value="all">All</option>
+                <select name="testing_site"> 
+                    <option value="All">-All-</option>           
+                    {% for s in sites%}
+                    <option value="{{s[0]}}">{{s[0]}}</option>                    
+                    {% endfor %}
                 </select><br>
 
                 <label for="">Date Processed</label>
-                <input id="start_date" type="date"> -
-                <input id="end_date" type="date"><br>
+                <input name="start_date" id="start_date" type="date"> -
+                <input name="end_date" id="end_date" type="date"><br>
+                <input type="hidden" name="user_name" id="user_name" placeholder="Username" value={{user_name}} >
+                <input type="hidden" name="user_type" id="user_type" placeholder="UserType" value={{user_type}} >
+
+                <table class="gridtable">
+                    <tr>
+                        <th>Total</th>
+                        {{count}}
+                        {% if data|length < 1 %}
+                            <th> Empty </th>
+                        {% endif%}
+
+                        {% if data|length > 0%}
+                            <th> {{data|sum(1)}} </th>
+                        {% endif %}
+                        
+                        <th>100%</th>
+                    </tr>
+                    {% for v in data%}
+                    <tr>
+                        <td style="text-transform: capitalize;"> {{v[0]}} </td>
+                        <td> {{v[1]}} </td>
+                        <td> {{v[2]}}%</td>
+                    </tr>
+                    {% endfor %}
+                </table>
                 
                 
-                <a href="{{url_for('home')}}" class="custom_btn">Back(Home)</a>
+                <a href="{{url_for('home', user_type=user_type, user_name=user_name)}}" class="custom_btn">Back(Home)</a>
                 <input type="submit" value="Filter" class="custom_btn">
                 <input type="reset" value="Reset" class="custom_btn">
             </form>

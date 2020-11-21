@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>    
+    <title>Login</title>    
     <link rel="stylesheet" href="../static/css/style.css">
     <link rel="stylesheet" href="../static/css/index.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
@@ -18,9 +18,10 @@
     
                 <label for="password"><i class="fas fa-lock"></i></label>
                 <input type="password" name="password" id="password" placeholder="Password" required>
+
+                <div style="color: red;">{{ msg }}</div>
                 
-                <label for="login" class="login_btn">Login</label>
-				<input type="submit" id="login" style="display: none;">
+				<input type="submit" id="login" class="login_btn" value="Login">
 				<a href="{{ url_for('register')}}" class="login_btn">Register</a>
             </form>
         </div>

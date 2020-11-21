@@ -14,75 +14,181 @@ mysql.init_app(app)
 
 conn = mysql.connect()
 cursor =conn.cursor()
+cursor.execute("use covidtest_fall2020")
 
-exec_sql_file(cursor, './db_init.sql')
-#cursor.execute("SELECT * FROM STUDENT")
-#data = cursor.fetchall()
-#print(data)
-exec_proc_file(cursor, './db_procedure.sql')
-#cursor.callproc('view_testers')
-#cursor.execute("SELECT * FROM view_testers_result")
-#data = cursor.fetchall()
-#print(data)
 
 # screen 1
 @app.route("/", methods=['GET', 'POST'])
 def index():
+    line = ""
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
-        password = md5(request.form['password'].encode('utf-8'))
-        # print(username)
+        password = md5(request.form['password'].encode('utf-8')).hexdigest()
 
+        # Check if account exists using MySQL
+        cursor.execute('SELECT * FROM user WHERE username = %s AND user_password = %s', (username, password))
+        account = cursor.fetchone()
         # we can now get the username and password here
         # after checking, we need to find the user type and redirect to home
-        if True:
-            return redirect(url_for("home"))
-    return render_template("index.html")
+        is_student = cursor.execute('SELECT * FROM student WHERE student_username = %s',(username))
+        if is_student:
+            return redirect(url_for("home", user_type='Student', user_name=username))
+        is_admin = cursor.execute('SELECT * FROM administrator WHERE admin_username = %s',(username))
+        if is_admin:
+            return redirect(url_for("home", user_type='Admin', user_name=username))
+        is_labtech = cursor.execute('SELECT * FROM labtech WHERE labtech_username = %s',(username))
+        is_sitetester = cursor.execute('SELECT * FROM sitetester WHERE sitetester_username = %s',(username))
+        if is_labtech==1 and is_sitetester==1:
+            return redirect(url_for("home", user_type='Lab Technician/Tester', user_name=username))
+        elif is_labtech==1 and is_sitetester == 0:
+            return redirect(url_for("home", user_type='Lab Technician', user_name=username))
+        elif is_labtech ==0 and is_sitetester==1: 
+            return redirect(url_for("home", user_type='Tester', user_name=username))
+        else:
+            line = "Incorrect username/password!"
 
-# screen 2
+    return render_template("index.html", msg=line)
+
+# screen 2 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
-    # do the similar as the function above
+    # do the similar as the function above 
     if request.method == 'POST':
         print(request.form)
         username = request.form['username']
         email = request.form['email']
         fname = request.form['fname']
         lname = request.form['lname']
-        password = md5(request.form['password'].encode('utf-8'))
-        if "lab_tech" in request.form:
-            print("lab_tech")
+        password = md5(request.form['password'].encode('utf-8')).hexdigest()
+
+        if "lab_tech" not in request.form and "site_tester" not in request.form:
+            house_type = request.form['housing_type']
+            location = request.form['location']
+            cursor.execute('CALL register_student(%s,%s,%s,%s,%s,%s,%s)',(username, email, fname, lname, location, house_type, password))
+            return redirect(url_for("home", user_type='Student', user_name=username))
+
+        else:
+            phone = request.form['phone']
+            labtech = "lab_tech" in request.form
+            tester = "site_tester" in request.form
+            cursor.execute('CALL register_employee(%s,%s,%s,%s,%s,%s,%s,%s)',(username, email, fname, lname, phone, labtech, tester, password))
+            if labtech and tester:
+                return redirect(url_for("home", user_type='Lab Technician/Tester', user_name=username))
+            elif labtech:
+                return redirect(url_for("home", user_type='Lab Technician', user_name=username))
+            elif tester:
+                return redirect(url_for("home", user_type='Tester', user_name=username))
+            
     return render_template('register.html')
 
 # screen 3
 @app.route("/home", methods=['GET', 'POST'])
 def home():
-    user_type = "Student"
-    user_type = "Tester"
-    # user_type = "Admin"
-    # user_type = "Lab Technician"
-    user_type = "Lab Technician/Tester"
-    return render_template("home.html", user_type = user_type)
+    user_type = ""
+    user_name = ""
+    if request.method == 'GET':
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+    return render_template("home.html", user_type = user_type, user_name = user_name)
 
 # screen 4
-@app.route("/student_test_results")
+@app.route("/student_test_results", methods=['GET','POST'])
 def student_test_results():
-    return render_template("student_test_results.html")
+    data = ()
+    student_name = '' # to get student_name 
+    if request.method == 'GET':
+        student_name = request.args.get('user_name')
+        search_count = cursor.execute('call student_view_results(%s, %s, %s, %s)', (student_name,None, None, None))
+        cursor.execute('select * from student_view_results_result')
+        data = cursor.fetchall()
+        return render_template("student_test_results.html", data_dict = data, user_name = student_name)
+
+    elif request.method == 'POST':
+        student_name = request.form['student_name']
+        status = request.form["status"]
+        startDate = request.form["startDate"]
+        if status == 'All':
+            status = None
+        if startDate == '':
+            startDate = None
+        endDate = request.form["endDate"]
+        if endDate == '':
+            endDate = None
+
+        search_count = cursor.execute('call student_view_results(%s, %s, %s, %s)', (student_name,status, startDate, endDate))
+        cursor.execute('select * from student_view_results_result')
+        data = cursor.fetchall()
+        return render_template("student_test_results.html", data_dict = data, user_name = student_name)
+
+    return render_template("student_test_results.html", data_dict = data, user_name=student_name)
 
 #  screen 5
 @app.route("/explore_test_result")
 def explore_test_result():
-    return render_template("explore_test_result.html")
+    user_type=''
+    user_name=''
+    test_id = None
+    data = {}
+    if request.method == 'GET':
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+        test_id = request.args.get('test_id')
+        if test_id != None:
+            cursor.execute('call explore_results(%s)',(test_id))
+            cursor.execute('select * from explore_results_result')
+            data = cursor.fetchone()
+            return render_template("explore_test_result.html", user_type = user_type, user_name = user_name, data = data)
+    return render_template("explore_test_result.html", user_type = user_type, user_name = user_name, data = data)
+
 
 #  screen 6
-@app.route("/aggregate_results")
-def aggregate_results():
-    return render_template("aggregate_results.html")
+@app.route("/aggregate_results", methods=['GET','POST'])
+def aggregate_results():    
+    user_type = ''
+    user_name = ''
+    data = []
+    cursor.execute('select * from site')
+    sites = cursor.fetchall()
+    if request.method == 'GET':
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+        cursor.execute('call aggregate_results(null,null,null,null,null);')
+        cursor.execute('select * from aggregate_results_result')
+        data = cursor.fetchall()
+        return render_template("aggregate_results.html", user_type = user_type, user_name = user_name, data=data, sites=sites)      
+
+    elif request.method == 'POST':
+        user_type = request.form['user_type']
+        user_name = request.form['user_name']
+        location = request.form['location']
+        housing_type = request.form['housing_type']
+        testing_site = request.form['testing_site']
+        start_date = request.form['start_date']
+        end_date = request.form['end_date']
+        if location == 'All':
+            location = None
+        if housing_type == 'All':
+            housing_type = None
+        if testing_site == 'All':
+            testing_site = None
+        if len(start_date) == 0:
+            start_date = None
+        if len(end_date) == 0:
+            end_date = None
+        # print('call aggregate_results(%s,%s,%s,%s,%s);',(location, housing_type, testing_site,start_date,end_date))
+        
+        cursor.execute('call aggregate_results(%s,%s,%s,%s,%s);',(location, housing_type, testing_site,start_date,end_date))
+        cursor.execute('select * from aggregate_results_result')
+        data = cursor.fetchall()
+        return render_template("aggregate_results.html", user_type = user_type, user_name = user_name, data=data, sites=sites)
 
 #  screen 7
 @app.route("/sign_up")
-def sign_up():
-    return render_template("sign_up.html")
+def sign_up(): 
+    user_name = request.args.get('user_name')    
+    cursor.execute('select * from site')
+    sites = cursor.fetchall()
+    return render_template("sign_up.html", user_name = user_name, sites=sites)
 
 #screen 8
 @app.route("/labtech_tests_processed",methods=['GET', 'POST'])
@@ -121,8 +227,21 @@ def process_pool():
 # screen 12
 @app.route("/create_appointment")
 def create_appointment():
-    return render_template("create_appointment.html")
+    cursor.execute('select * from site')
+    sites = cursor.fetchall()
+    return render_template("create_appointment.html", sites=sites)
 
+# screen 13
+@app.route("/view_appointments")
+def view_appointments():    
+    cursor.execute('select * from site')
+    sites = cursor.fetchall()
+    return render_template("view_appointments.html", sites=sites)
+
+# screen 14
+@app.route("/reassign_tester")
+def reassign_tester():
+    return render_template("reassign_tester.html")
 
 # screen 15
 @app.route("/create_testing_site")
@@ -132,6 +251,24 @@ def create_testing_site():
 # screen 16
 @app.route("/explore_pool_result")
 def explore_pool_result():
+    user_type=''
+    user_name=''
+    pool_id = 1
+    data = {}
+    if request.method == 'GET':
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+        pool_id = request.args.get('test_id')
+        if pool_id != None:
+            cursor.execute('pool_metadata(%s)',(pool_id))
+            cursor.execute('select * from pool_metadata_result')
+            pool_data = cursor.fetchone()
+            cursor.execute('tests_in_pool(%s)',(pool_id))
+            cursor.execute('select * from tests_in_pool_result')
+            tests_data = cursor.fetchone()
+            print(pool_data)
+            print(tests_data)
+            return render_template("explore_test_result.html", user_type = user_type, user_name = user_name, pool_data=pool_data, tests_data=tests_data)
     return render_template("explore_pool_result.html")
 
 # screen 17
@@ -142,8 +279,12 @@ def change_testing_site():
 # screen 18
 @app.route("/daily_results")
 def daily_results():
-    return render_template("daily_results.html")
-
+    user_type = request.args.get('user_type')
+    user_name = request.args.get('user_name')
+    cursor.execute('call daily_results();')
+    cursor.execute('SELECT * FROM daily_results_result;')
+    data = cursor.fetchall()
+    return render_template("daily_results.html", user_type=user_type, user_name=user_name, data=data)
 
 
 if __name__ == '__main__':

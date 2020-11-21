@@ -1,7 +1,15 @@
 .content {
-    width: 550px;    
+    width: 750px;    
+}
+
+.content form label {
+    display: inline;
 }
 
 .content form .custom_btn {
     width: 150px;
+}
+
+.content table.gridtable {
+    width: 600px;
 }

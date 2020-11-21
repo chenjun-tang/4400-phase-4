@@ -11,9 +11,9 @@
     <div class="page">
         <div class="content">
             <h1>Student View Test Results</h1>
-            <form action="">
+            <form action="{{ url_for('student_test_results') }}" method="POST">
                 <label for="status">Status:</label>
-                <select name="" id="status">
+                <select name="status"  id="status">
                     <option value="all">All</option>
                     <option value="negative">Negative</option>
                     <option value="positive">Positive</option>                
@@ -21,11 +21,34 @@
                 </select>
 
                 <label for="">Timeslot Date:</label>
-                <input type="date"> - 
-                <input type="date">
-                <a href="{{url_for('home')}}" class="custom_btn">Back(Home)</a>
+                <input type="date" name="startDate" id="startDate"> - 
+                <input type="date" name="endDate" id="endDate">
+                <input type="hidden" name="student_name" id="student_name" placeholder="Username" value={{user_name}} >
+
+                <table class="gridtable" >
+                    <tr>
+                        <th>Pool ID#</th>
+                        <th>Timeslot Date</th>
+                        <th>Date processedd</th>
+                        <th>Pool Status</th>
+                        <th>Status</th>
+                    </tr>
+                    {% for v in data_dict %}
+                    <tr>
+                        <td> <a href="{{ url_for('explore_test_result', user_type='Student', user_name=user_name, test_id=v[0])}}" style="text-decoration:underline;">{{v[0]}}</a> </td>
+                        <td> {{v[1]}} </td>
+                        <td> {{v[2]}} </td>
+                        <td> {{v[3]}} </td>
+                        <td> {{v[4]}} </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+
+                <a href="{{url_for('home', user_type='Student', user_name=user_name)}}" class="custom_btn">Back(Home)</a>
                 <input type="submit" value="Filter" class="custom_btn">
                 <input type="reset" value="Reset" class="custom_btn">
+
+
             </form>
         </div>
     </div>

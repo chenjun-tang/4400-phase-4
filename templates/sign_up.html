@@ -14,8 +14,10 @@
             <form action="">
                 <label for="testing_site">Testing Site:</label>
                 <select name="testing_site">            
-                    <option value="all">All</option>
-                </select>
+                    {% for s in sites%}
+                    <option value="{{s[0]}}">{{s[0]}}</option>                    
+                    {% endfor %}
+                </select><br>
 
                 <label for="date">Date:</label>
                 <input id="start_date" type="date"> -
@@ -25,11 +27,21 @@
                 <input id="start_time" type="time"> -
                 <input id="end_time" type="time"><br>
 
-                <a href="{{url_for('home')}}" class="custom_btn">Back(Home)</a>
+                <table class="gridtable">
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Site Address</th>
+                        <th>Testing Site</th>
+                        <th>Signup</th>
+                    </tr>
+                </table>
+
+                <a href="{{url_for('home', user_type='Student', user_name=user_name)}}" class="custom_btn">Back(Home)</a>
                 <input type="reset" value="Reset" class="custom_btn">
                 <input type="submit" value="Signup" class="custom_btn">
 
-
+                
             </form>
         </div>
     </div>

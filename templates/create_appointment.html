@@ -13,15 +13,17 @@
             <h1>Create an Appointment</h1>
             <form action="">                
                 <label for="site">Site</label>
-                <select name="" id="site">
-                    <option value="Stamps">Stamps</option>
+                <select name="site" id="site" required>
+                    {% for s in sites%}
+                    <option value="{{s[0]}}">{{s[0]}}</option>                    
+                    {% endfor %}
                 </select><br>
 
                 <label for="date">Date</label>
-                <input type="date"><br>
+                <input type="date" required><br>
 
                 <label for="time">Time</label>
-                <input type="time">
+                <input type="time" required>
 
                 <input type="submit" id="submit" style="display: none;">
             </form>
