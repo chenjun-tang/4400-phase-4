@@ -8,7 +8,7 @@ app = Flask(__name__, template_folder="templates", static_folder="static")
 
 mysql = MySQL()
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'sunzhimin'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
@@ -152,7 +152,7 @@ def aggregate_results():
     if request.method == 'GET':
         user_type = request.args.get('user_type')
         user_name = request.args.get('user_name')
-        cursor.execute('call aggregate_results("East",null,null,null,null);')
+        cursor.execute('call aggregate_results(null,null,null,null,null);')
         cursor.execute('select * from aggregate_results_result')
         data = cursor.fetchall()
         return render_template("aggregate_results.html", user_type = user_type, user_name = user_name, data=data, sites=sites)      
@@ -251,6 +251,24 @@ def create_testing_site():
 # screen 16
 @app.route("/explore_pool_result")
 def explore_pool_result():
+    user_type=''
+    user_name=''
+    pool_id = 1
+    data = {}
+    if request.method == 'GET':
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+        pool_id = request.args.get('test_id')
+        if pool_id != None:
+            cursor.execute('pool_metadata(%s)',(pool_id))
+            cursor.execute('select * from pool_metadata_result')
+            pool_data = cursor.fetchone()
+            cursor.execute('tests_in_pool(%s)',(pool_id))
+            cursor.execute('select * from tests_in_pool_result')
+            tests_data = cursor.fetchone()
+            print(pool_data)
+            print(tests_data)
+            return render_template("explore_test_result.html", user_type = user_type, user_name = user_name, pool_data=pool_data, tests_data=tests_data)
     return render_template("explore_pool_result.html")
 
 # screen 17
