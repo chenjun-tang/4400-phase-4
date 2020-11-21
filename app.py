@@ -266,7 +266,7 @@ def create_pool():
         # data1 = cursor.fetchall()
         # print(data1)
 
-    return render_template("create_pool.html",user_type = user_type, user_name = user_name, data=data)
+    return render_template("create_pool.html", user_type = user_type, user_name = user_name, data=data)
 
 #screen 11
 @app.route("/process_pool", methods=["GET", "POST"])
