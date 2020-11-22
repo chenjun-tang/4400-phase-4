@@ -205,25 +205,16 @@ def labtech_tests_processed():
 
 #screen 9
 @app.route("/view_pools", methods=['GET', 'POST'])
-def view_pools():
-    user_type=''
-    user_name=''
-    begin_process_date = ''
-    end_process_date = ''
-    pool_status = ''
-    processed_by = ''
-    data = []
+def view_pools():    
+    user_type = request.args.get('user_type')
+    user_name = request.args.get('user_name')
+
     if request.method == 'GET':
-        user_type = request.args.get('user_type')
-        user_name = request.args.get('user_name')
         cursor.execute('call view_pools(null, null, null, null)')
         cursor.execute('select * from view_pools_result')
         data = cursor.fetchall()
-        return render_template("view_pools.html",user_type = user_type, user_name = user_name, data=data)
 
     elif request.method == 'POST':
-        user_type = request.args.get('user_type')
-        user_name = request.args.get('user_name')
         processed_by = request.form['processedBy']
         begin_process_date = request.form['start_date']
         end_process_date = request.form['end_date']
@@ -237,8 +228,7 @@ def view_pools():
         cursor.execute('call view_pools(%s, %s, %s, %s)',(begin_process_date, end_process_date, pool_status, processed_by))
         cursor.execute('select * from view_pools_result')
         data = cursor.fetchall()
-        #print(data)
-        return render_template("view_pools.html",user_type = user_type, user_name = user_name, data=data)
+
     return render_template("view_pools.html",user_type = user_type, user_name = user_name, data=data)
 
 # screen 10
