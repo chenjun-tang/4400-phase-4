@@ -25,7 +25,7 @@
                 <a href="{{url_for('labtech_tests_processed')}}">View My Processed Tests</a>
 
                 <a href="{{url_for('create_pool')}}">Create Pool</a>
-                <a href="{{url_for('view_pools')}}">View Pools</a>
+                <a href="{{url_for('view_pools', user_type=user_type, user_name=user_name)}}">View Pools</a>
             
             {% elif user_type == "Lab Technician/Tester"%}    
                 <a href="{{url_for('change_testing_site')}}">Change Testing Site</a>
@@ -36,7 +36,7 @@
                 <a href="{{url_for('labtech_tests_processed')}}">View My Processed Tests</a>
 
                 <a href="{{url_for('create_pool')}}">Create Pool</a>
-                <a href="{{url_for('view_pools')}}">View Pools</a>
+                <a href="{{url_for('view_pools', user_type=user_type, user_name=user_name)}}">View Pools</a>
 
             
             {% elif user_type == "Admin"%}

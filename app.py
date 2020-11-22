@@ -161,8 +161,8 @@ def aggregate_results():
         return render_template("aggregate_results.html", user_type = user_type, user_name = user_name, data=data, sites=sites)
 
     elif request.method == 'POST':
-        user_type = request.form['user_type']
-        user_name = request.form['user_name']
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
         location = request.form['location']
         housing_type = request.form['housing_type']
         testing_site = request.form['testing_site']
@@ -216,7 +216,11 @@ def view_pools():
     if request.method == 'GET':
         user_type = request.args.get('user_type')
         user_name = request.args.get('user_name')
+        cursor.execute('call view_pools(null, null, null, null)')
+        cursor.execute('select * from view_pools_result')
+        data = cursor.fetchall()
         return render_template("view_pools.html",user_type = user_type, user_name = user_name, data=data)
+
     elif request.method == 'POST':
         user_type = request.args.get('user_type')
         user_name = request.args.get('user_name')

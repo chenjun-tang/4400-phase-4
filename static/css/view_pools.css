@@ -1,5 +1,13 @@
 .content {
-    width: 550px;    
+    width: 1200px;    
+}
+
+.content .gridtable {
+    width: 1100px;
+}
+
+.content form input, .content form select {
+    border: 1px solid #dee0e4;
 }
 
 .content form .custom_btn {
