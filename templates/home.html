@@ -21,7 +21,7 @@
                 <a href="{{url_for('create_appointment')}}">Create Appointment</a>
 
             {% elif user_type == "Lab Technician"%}
-                <a href="{{url_for('process_pool')}}">Process Pool</a>
+                <a href="{{url_for('view_pools', user_type=user_type, user_name=user_name)}}">Process Pool</a>
                 <a href="{{url_for('labtech_tests_processed')}}">View My Processed Tests</a>
 
                 <a href="{{url_for('create_pool', user_type=user_type, user_name=user_name)}}">Create Pool</a>
@@ -32,7 +32,7 @@
                 <a href="{{url_for('view_appointments', user_type=user_type, user_name=user_name)}}">View Appointments</a>
                 <a href="{{url_for('create_appointment', user_type=user_type, user_name=user_name)}}">Create Appointment</a>
                 
-                <a href="{{url_for('process_pool')}}">Process Pool</a>
+                <a href="{{url_for('view_pools', user_type=user_type, user_name=user_name)}}">Process Pool</a>
                 <a href="{{url_for('labtech_tests_processed')}}">View My Processed Tests</a>
 
                 <a href="{{url_for('create_pool', user_type=user_type, user_name=user_name)}}">Create Pool</a>
