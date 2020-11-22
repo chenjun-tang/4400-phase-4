@@ -19,9 +19,12 @@
                 <input id="start_date" type="date"><br>
 
                 <label for="pool_status">Pool Status:</label>
-                <button id="posBtn" type="button" class="switch active">Positive</button>
-                <button id="negBtn" type="button" class="switch">Negative</button>
-                
+                <!-- <button id="posBtn" type="button" class="switch active">Positive</button>
+                <button id="negBtn" type="button" class="switch">Negative</button> -->
+                <label for="pos" class="switch active" id="posBtn">Positive</label>
+                <input type="radio" value="positive" id="pos" checked hidden>
+                <label for="neg" class="switch" id="negBtn">Negative</label>
+                <input type="radio" value="negative" id="neg" hidden>
                     
                 <div class="positiveTable" id="positiveTable">
                     <table class="gridtable" >
