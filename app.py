@@ -31,22 +31,24 @@ def index():
         account = cursor.fetchone()
         # we can now get the username and password here
         # after checking, we need to find the user type and redirect to home
-        is_student = cursor.execute('SELECT * FROM student WHERE student_username = %s',(username))
-        if is_student:
-            return redirect(url_for("home", user_type='Student', user_name=username))
-        is_admin = cursor.execute('SELECT * FROM administrator WHERE admin_username = %s',(username))
-        if is_admin:
-            return redirect(url_for("home", user_type='Admin', user_name=username))
-        is_labtech = cursor.execute('SELECT * FROM labtech WHERE labtech_username = %s',(username))
-        is_sitetester = cursor.execute('SELECT * FROM sitetester WHERE sitetester_username = %s',(username))
-        if is_labtech==1 and is_sitetester==1:
-            return redirect(url_for("home", user_type='Lab Technician/Tester', user_name=username))
-        elif is_labtech==1 and is_sitetester == 0:
-            return redirect(url_for("home", user_type='Lab Technician', user_name=username))
-        elif is_labtech ==0 and is_sitetester==1:
-            return redirect(url_for("home", user_type='Tester', user_name=username))
+        if not account:
+            line = "Incorrect username/password!"        
         else:
-            line = "Incorrect username/password!"
+            is_student = cursor.execute('SELECT * FROM student WHERE student_username = %s',(username))
+            if is_student:
+                return redirect(url_for("home", user_type='Student', user_name=username))
+            is_admin = cursor.execute('SELECT * FROM administrator WHERE admin_username = %s',(username))
+            if is_admin:
+                return redirect(url_for("home", user_type='Admin', user_name=username))
+            is_labtech = cursor.execute('SELECT * FROM labtech WHERE labtech_username = %s',(username))
+            is_sitetester = cursor.execute('SELECT * FROM sitetester WHERE sitetester_username = %s',(username))
+            if is_labtech==1 and is_sitetester==1:
+                return redirect(url_for("home", user_type='Lab Technician/Tester', user_name=username))
+            elif is_labtech==1 and is_sitetester == 0:
+                return redirect(url_for("home", user_type='Lab Technician', user_name=username))
+            elif is_labtech ==0 and is_sitetester==1:
+                return redirect(url_for("home", user_type='Tester', user_name=username))
+            
 
     return render_template("index.html", msg=line)
 
