@@ -370,18 +370,17 @@ def explore_pool_result():
     if request.method == 'GET':
         user_type = request.args.get('user_type')
         user_name = request.args.get('user_name')
-        pool_id = request.args.get('test_id')
+        pool_id = request.args.get('pool_id')
         if pool_id != None:
-            cursor.execute('pool_metadata(%s)',(pool_id))
+            cursor.execute('call pool_metadata(%s)',(pool_id))
             cursor.execute('select * from pool_metadata_result')
             pool_data = cursor.fetchone()
-            cursor.execute('tests_in_pool(%s)',(pool_id))
+            cursor.execute('call tests_in_pool(%s)',(pool_id))
             cursor.execute('select * from tests_in_pool_result')
-            tests_data = cursor.fetchone()
-            print(pool_data)
-            print(tests_data)
-            return render_template("explore_test_result.html", user_type = user_type, user_name = user_name, pool_data=pool_data, tests_data=tests_data)
-    return render_template("explore_pool_result.html")
+            tests_data = cursor.fetchall()
+            print("tests_data:",tests_data)
+            return render_template("explore_pool_result.html", user_type = user_type, user_name = user_name, pool_data=pool_data, tests_data=tests_data)
+    # return render_template("explore_pool_result.html")
 
 # screen 17
 @app.route("/change_testing_site")

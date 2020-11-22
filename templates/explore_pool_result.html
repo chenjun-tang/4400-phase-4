@@ -20,6 +20,11 @@
                     <th>Pool Result</th>
                     <th>Processed By</th>
                 </tr>
+                <tr>
+                    {% for p in pool_data%}
+                    <td>{{p}}</td>
+                    {% endfor %}
+                </tr>
             </table>
 
             <h2>Tests In Pool</h2>
@@ -30,6 +35,14 @@
                     <th>Testing Site</th>
                     <th>Test Result</th>
                 </tr>
+                {% for test in tests_data%}
+                <tr>
+                    <td>{{test[0]}}</td>                    
+                    <td>{{test[1]}}</td>                    
+                    <td>{{test[2]}}</td>
+                    <td>{{test[3]}}</td>
+                </tr>
+                {% endfor %}
             </table>
             <a href="{{url_for('home',user_type=user_type, user_name=user_name)}}" class="custom_btn">Back(Home)</a>
         </div>

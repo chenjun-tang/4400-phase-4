@@ -37,7 +37,7 @@
                     </tr>
                     {% for v in data %}
                     <tr>
-                        <td> {{v[0]}} </td>
+                        <td> <a href="{{ url_for('explore_pool_result', user_type=user_type, user_name=user_name, pool_id=v[0])}}" style="text-decoration:underline;">{{v[0]}}</a> </td>
                         <td> {{v[1]}} </td>
                         <td> {{v[2]}} </td>
                         <td> {{v[3]}} </td>
