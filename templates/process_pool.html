@@ -11,7 +11,7 @@
     <div class="page">
         <div class="content">
             <h1>Process Pool</h1>
-            <form action="{{ url_for('process_pool') }}" method="POST">
+            <form action="{{ url_for('process_pool', user_type=user_type, user_name=user_name) }}" method="POST">
                 <label for="">Pool ID:</label>
                 <span id="pool_id">{{pool_id}}</span></input></li><br>
 
@@ -22,9 +22,9 @@
                 <!-- <button id="posBtn" type="button" class="switch active">Positive</button>
                 <button id="negBtn" type="button" class="switch">Negative</button> -->
                 <label for="pos" class="switch active" id="posBtn">Positive</label>
-                <input type="radio" value="positive" id="pos" checked hidden>
+                <input type="radio" name="status" value="positive" id="pos" checked hidden>
                 <label for="neg" class="switch" id="negBtn">Negative</label>
-                <input type="radio" value="negative" id="neg" hidden>
+                <input type="radio" name="status" value="negative" id="neg" hidden>
                     
                 <div class="positiveTable" id="positiveTable">
                     <table class="gridtable" >
