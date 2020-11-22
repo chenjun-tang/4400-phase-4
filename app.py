@@ -236,7 +236,6 @@ def view_pools():
 def create_pool():
     user_type = request.args.get('user_type')
     user_name = request.args.get('user_name')
-    pool_id = ''
     cursor.execute('SELECT test_id, appt_date FROM TEST WHERE pool_id is null')
     data = cursor.fetchall()
     if request.method == 'GET':
@@ -255,10 +254,9 @@ def create_pool():
             for i in range(1, len(checkedIDs)):
                 test_id = checkedIDs[i]
                 cursor.execute('call assign_test_to_pool(%s,%s)',(pool_id, test_id))
-
-        # cursor.execute('SELECT test_id, appt_date FROM TEST WHERE pool_id = %s', (pool_id))
-        # data1 = cursor.fetchall()
-        # print(data1)
+                # query again to remove the selected tests in the table
+                cursor.execute('SELECT test_id, appt_date FROM TEST WHERE pool_id is null')
+                data = cursor.fetchall()
 
     return render_template("create_pool.html", user_type = user_type, user_name = user_name, data=data)
 
@@ -291,35 +289,25 @@ def process_pool():
 # screen 12
 @app.route("/create_appointment", methods=["GET", "POST"])
 def create_appointment():
-    user_type=''
-    user_name=''
+    user_type = request.args.get('user_type')
+    user_name = request.args.get('user_name')
     cursor.execute('select * from site')
     sites = cursor.fetchall()
-    site = ''
-    date = ''
-    time = ''
     if request.method == 'GET':
-        user_type = request.args.get('user_type')
-        user_name = request.args.get('user_name')
+        pass
     elif request.method == 'POST':
-        user_type = request.args.get('user_type')
-        user_name = request.args.get('user_name')
         site = request.form['site']
         date = request.form['date']
         time = request.form['time']
         cursor.execute('call create_appointment(%s, %s, %s)',(site, date, time))
-
-        # cursor.execute('SELECT * FROM appointment WHERE site_name=%s and appt_date=%s and appt_time=%s', (site, date, time))
-        # data1 = cursor.fetchall()
-        # print(data1)
 
     return render_template("create_appointment.html", user_type = user_type, user_name = user_name, sites=sites)
 
 # screen 13
 @app.route("/view_appointments", methods=["GET", "POST"])
 def view_appointments():
-    user_type=''
-    user_name=''
+    user_type = request.args.get('user_type')
+    user_name = request.args.get('user_name')
     cursor.execute('select * from site')
     sites = cursor.fetchall()
     site = ''
@@ -330,8 +318,9 @@ def view_appointments():
     availablity = ''
     data = []
     if request.method == 'GET':
-        user_type = request.args.get('user_type')
-        user_name = request.args.get('user_name')
+        cursor.execute('call view_appointments(null, null, null, null, null, null)')
+        cursor.execute('select * from view_appointments_result')
+        data = cursor.fetchall()
     elif request.method == 'POST':
         user_type = request.args.get('user_type')
         user_name = request.args.get('user_name')
