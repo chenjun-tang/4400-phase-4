@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Process Pool</title>    
+    <title>Process Pool</title>
     <link rel="stylesheet" href="../static/css/style.css">
     <link rel="stylesheet" href="../static/css/process_pool.css">
 </head>
@@ -16,16 +16,16 @@
                 <span id="pool_id">{{pool_id}}</span></input></li><br>
 
                 <label for="">Date Processed:</label>
-                <input id="start_date" type="date"><br>
+                <input id="start_date" name="date" type="date"><br>
 
                 <label for="pool_status">Pool Status:</label>
                 <!-- <button id="posBtn" type="button" class="switch active">Positive</button>
                 <button id="negBtn" type="button" class="switch">Negative</button> -->
                 <label for="pos" class="switch active" id="posBtn">Positive</label>
-                <input type="radio" value="positive" id="pos" checked hidden>
+                <input type="radio" name="status" value="positive" id="pos" checked hidden>
                 <label for="neg" class="switch" id="negBtn">Negative</label>
-                <input type="radio" value="negative" id="neg" hidden>
-                    
+                <input type="radio" name="status" value="negative" id="neg" hidden>
+
                 <div class="positiveTable" id="positiveTable">
                     <table class="gridtable" >
                         <tr>
@@ -33,29 +33,29 @@
                             <th>Date Tested</th>
                             <th>Test Result</th>
                         </tr>
-                        {% for k,v in data_dict.items() %}
+                        {% for v in data %}
                         <tr>
                             <td> {{v[0]}} </td>
                             <td> {{v[1]}} </td>
-                            <td> 
-                                <select name="pool_status">            
+                            <td>
+                                <select name="{{v[0]}}">
                                     <option value="positive">Positive</option>
                                     <option value="negative">Negative</option>
-                                </select> 
+                                </select>
                             </td>
                         </tr>
                         {% endfor %}
                     </table>
                 </div>
-                
-                <div class="negativeTable" id="negativeTable" style="display:none"> 
+
+                <div class="negativeTable" id="negativeTable" style="display:none">
                     <table class="gridtable" >
                         <tr>
                             <th>Test ID#</th>
                             <th>Date Tested</th>
                             <th>Test Result</th>
                         </tr>
-                        {% for k,v in data_dict.items() %}
+                        {% for v in data %}
                         <tr>
                             <td> {{v[0]}} </td>
                             <td> {{v[1]}} </td>
@@ -63,12 +63,12 @@
                         </tr>
                         {% endfor %}
                     </table>
-                    
+
                 </div>
-               
+
                 <a href="{{url_for('home', user_type=user_type, user_name=user_name)}}" class="custom_btn">Back(Home)</a>
                 <input type="submit" value="Process Pool" class="custom_btn">
-                
+
             </form>
         </div>
     </div>

@@ -32,7 +32,7 @@ def index():
         # we can now get the username and password here
         # after checking, we need to find the user type and redirect to home
         if not account:
-            line = "Incorrect username/password!"        
+            line = "Incorrect username/password!"
         else:
             is_student = cursor.execute('SELECT * FROM student WHERE student_username = %s',(username))
             if is_student:
@@ -48,7 +48,7 @@ def index():
                 return redirect(url_for("home", user_type='Lab Technician', user_name=username))
             elif is_labtech ==0 and is_sitetester==1:
                 return redirect(url_for("home", user_type='Tester', user_name=username))
-            
+
 
     return render_template("index.html", msg=line)
 
@@ -205,7 +205,7 @@ def labtech_tests_processed():
 
 #screen 9
 @app.route("/view_pools", methods=['GET', 'POST'])
-def view_pools():    
+def view_pools():
     user_type = request.args.get('user_type')
     user_name = request.args.get('user_name')
 
@@ -263,28 +263,51 @@ def create_pool():
 #screen 11
 @app.route("/process_pool", methods=["GET", "POST"])
 def process_pool():
-    # user_type=''
-    # user_name=''
-    # pool_id = ''
-    # pool_status = ''
-    # date = ''
-    # processed_by = ''
-    # if request.method == 'POST':
-    #     pool_id = request.form['pool_id']
-    #     pool_status = request.form['pool_status']
-    #     date = request.form['start_date']
-    #     processed_by = request.form['username']
-    #     cursor.execute('call process_pool(%s, %s, %s, %s)', (pool_id, pool_status, date, processed_by))
-    #
-    #     cursor.execute('select * from student_view_results_result')
-    #     data = cursor.fetchall()
+    user_type=''
+    user_name=''
+    pool_id = ''
+    pool_status = 'positive'
+    date = ''
+    processed_by = ''
+    data = []
+    if request.method == 'GET':
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+        pool_id = request.args.get('pool_id')
+        if pool_id:
+            cursor.execute('SELECT test_id, appt_date,test_status FROM TEST WHERE pool_id = %s', (pool_id))
+            data = cursor.fetchall()
+        #print(request.form.getlist('status'))
 
-    pool_id = 1234
-    data = {
-        1:['1','8/17/20','Negative'],
-        2:['2','8/19/20','Negatve'],
-    }
-    return render_template("process_pool.html", pool_id = pool_id, data_dict=data)
+    elif request.method == 'POST':
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+        pool_id = request.args.get('pool_id')
+        date = request.form['date']
+        processed_by = user_name
+
+
+        if pool_id:
+            cursor.execute('SELECT test_id, appt_date,test_status FROM TEST WHERE pool_id = %s', (pool_id))
+            data = cursor.fetchall()
+
+        cursor.execute('call process_pool(%s, %s, %s, %s)', (pool_id, pool_status, date, processed_by))
+
+        for d in data:
+            test_id = d[0]
+            test_status = request.form[d[0]]
+            cursor.execute('call process_test(%s, %s)', (test_id, test_status))
+
+
+
+        #
+        # cursor.execute('select * from student_view_results_result')
+        # data = cursor.fetchall()
+
+    # pool_id = 1234
+    # data = [['1','8/17/20','Negative'],
+    #         ['2','8/19/20','Negatve']]
+    return render_template("process_pool.html", user_type = user_type, user_name = user_name, pool_id = pool_id, data=data)
 
 # screen 12
 @app.route("/create_appointment", methods=["GET", "POST"])
