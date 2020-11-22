@@ -265,7 +265,7 @@ def create_pool():
 def process_pool():
     user_type=''
     user_name=''
-    pool_id = ''
+    pool_id = request.args.get('pool_id')
     pool_status = ''
     date = ''
     processed_by = ''
@@ -274,22 +274,24 @@ def process_pool():
         user_type = request.args.get('user_type')
         user_name = request.args.get('user_name')
         pool_id = request.args.get('pool_id')
+        print('get', pool_id)
         if pool_id:
             cursor.execute('SELECT test_id, appt_date,test_status FROM TEST WHERE pool_id = %s', (pool_id))
             data = cursor.fetchall()
 
     elif request.method == 'POST':
+        print('post', pool_id)
         if 'status' in request.form:
             pool_status = request.form['status']
         user_type = request.args.get('user_type')
         user_name = request.args.get('user_name')
-        pool_id = request.args.get('pool_id')
         date = request.form['date']
         processed_by = user_name
 
         if pool_id:
             cursor.execute('SELECT test_id, appt_date,test_status FROM TEST WHERE pool_id = %s', (pool_id))
             data = cursor.fetchall()
+        print(pool_id, pool_status, date, processed_by)
         cursor.execute('call process_pool(%s, %s, %s, %s)', (pool_id, pool_status, date, processed_by))
         if pool_status == 'positive':
             for d in data:
