@@ -234,17 +234,14 @@ def view_pools():
 # screen 10
 @app.route("/create_pool", methods=['GET', 'POST'])
 def create_pool():
-    user_type = ''
-    user_name = ''
+    user_type = request.args.get('user_type')
+    user_name = request.args.get('user_name')
     pool_id = ''
     cursor.execute('SELECT test_id, appt_date FROM TEST WHERE pool_id is null')
     data = cursor.fetchall()
     if request.method == 'GET':
-        user_type = request.args.get('user_type')
-        user_name = request.args.get('user_name')
+        pass
     elif request.method == 'POST':
-        user_type = request.args.get('user_type')
-        user_name = request.args.get('user_name')
         pool_id = request.form['pool_id']
         checkedIDs = []
         for d in data:
