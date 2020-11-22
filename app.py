@@ -266,7 +266,7 @@ def process_pool():
     user_type=''
     user_name=''
     pool_id = ''
-    pool_status = 'positive'
+    pool_status = ''
     date = ''
     processed_by = ''
     data = []
@@ -277,36 +277,36 @@ def process_pool():
         if pool_id:
             cursor.execute('SELECT test_id, appt_date,test_status FROM TEST WHERE pool_id = %s', (pool_id))
             data = cursor.fetchall()
-        #print(request.form.getlist('status'))
 
     elif request.method == 'POST':
+        if 'status' in request.form:
+            pool_status = request.form['status']
         user_type = request.args.get('user_type')
         user_name = request.args.get('user_name')
         pool_id = request.args.get('pool_id')
         date = request.form['date']
         processed_by = user_name
 
-
         if pool_id:
             cursor.execute('SELECT test_id, appt_date,test_status FROM TEST WHERE pool_id = %s', (pool_id))
             data = cursor.fetchall()
-
         cursor.execute('call process_pool(%s, %s, %s, %s)', (pool_id, pool_status, date, processed_by))
-
-        for d in data:
-            test_id = d[0]
-            test_status = request.form[d[0]]
-            cursor.execute('call process_test(%s, %s)', (test_id, test_status))
-
-
-
-        #
-        # cursor.execute('select * from student_view_results_result')
-        # data = cursor.fetchall()
-
-    # pool_id = 1234
-    # data = [['1','8/17/20','Negative'],
-    #         ['2','8/19/20','Negatve']]
+        if pool_status == 'positive':
+            for d in data:
+                test_id = d[0]
+                test_status = request.form[d[0]]
+                cursor.execute('call process_test(%s, %s)', (test_id, test_status))
+        elif pool_status == 'negative':
+            for d in data:
+                test_id = d[0]
+                test_status = 'negative'
+                cursor.execute('call process_test(%s, %s)', (test_id, test_status))
+        # cursor.execute('SELECT * FROM TEST WHERE pool_id = %s', (pool_id))
+        # data1 = cursor.fetchall()
+        # print(data1)
+        # cursor.execute('SELECT * FROM POOL WHERE pool_id = %s', (pool_id))
+        # data1 = cursor.fetchall()
+        # print(data1)
     return render_template("process_pool.html", user_type = user_type, user_name = user_name, pool_id = pool_id, data=data)
 
 # screen 12
