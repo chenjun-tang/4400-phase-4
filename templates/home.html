@@ -17,33 +17,33 @@
 
             {% elif user_type == "Tester"%}
                 <a href="{{url_for('change_testing_site')}}">Change Testing Site</a>
-                <a href="{{url_for('view_appointments')}}">View Appointments</a>
+                <a href="{{url_for('view_appointments', user_type=user_type, user_name=user_name)}}">View Appointments</a>
                 <a href="{{url_for('create_appointment')}}">Create Appointment</a>
 
             {% elif user_type == "Lab Technician"%}
-                <a href="{{url_for('process_pool')}}">Process Pool</a>
+                <a href="{{url_for('view_pools', user_type=user_type, user_name=user_name)}}">Process Pool</a>
                 <a href="{{url_for('labtech_tests_processed')}}">View My Processed Tests</a>
 
-                <a href="{{url_for('create_pool')}}">Create Pool</a>
-                <a href="{{url_for('view_pools')}}">View Pools</a>
+                <a href="{{url_for('create_pool', user_type=user_type, user_name=user_name)}}">Create Pool</a>
+                <a href="{{url_for('view_pools', user_type=user_type, user_name=user_name)}}">View Pools</a>
             
             {% elif user_type == "Lab Technician/Tester"%}    
                 <a href="{{url_for('change_testing_site')}}">Change Testing Site</a>
-                <a href="{{url_for('view_appointments')}}">View Appointments</a>
-                <a href="{{url_for('create_appointment')}}">Create Appointment</a>
+                <a href="{{url_for('view_appointments', user_type=user_type, user_name=user_name)}}">View Appointments</a>
+                <a href="{{url_for('create_appointment', user_type=user_type, user_name=user_name)}}">Create Appointment</a>
                 
-                <a href="{{url_for('process_pool')}}">Process Pool</a>
+                <a href="{{url_for('view_pools', user_type=user_type, user_name=user_name)}}">Process Pool</a>
                 <a href="{{url_for('labtech_tests_processed')}}">View My Processed Tests</a>
 
-                <a href="{{url_for('create_pool')}}">Create Pool</a>
-                <a href="{{url_for('view_pools')}}">View Pools</a>
+                <a href="{{url_for('create_pool', user_type=user_type, user_name=user_name)}}">Create Pool</a>
+                <a href="{{url_for('view_pools', user_type=user_type, user_name=user_name)}}">View Pools</a>
 
             
             {% elif user_type == "Admin"%}
                 <a href="{{url_for('reassign_tester')}}">Reassign Testers</a>
                 <a href="{{url_for('create_testing_site')}}">Create Testing Site</a>
-                <a href="{{url_for('create_appointment')}}">Create Appointment</a>
-                <a href="{{url_for('view_appointments')}}">View Appointments</a>    
+                <a href="{{url_for('create_appointment', user_type=user_type, user_name=user_name)}}">Create Appointment</a>
+                <a href="{{url_for('view_appointments', user_type=user_type, user_name=user_name)}}">View Appointments</a>    
             {% endif %}
             
             <a href="{{url_for('aggregate_results', user_type=user_type, user_name=user_name)}}">View Aggregate Results</a>    

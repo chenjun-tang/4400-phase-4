@@ -11,7 +11,7 @@
     <div class="page">
         <div class="content">
             <h1>Create a Pool</h1>
-            <form action="{{ url_for('create_pool') }}" method="POST">
+            <form action="{{ url_for('create_pool', user_type=user_type, user_name=user_name) }}" method="POST">
                 <label for="pool_id">Pool ID:</label>
                 <input type="text" name="pool_id" id="pool_id">
 
