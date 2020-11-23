@@ -11,15 +11,17 @@
     <div class="page">
         <div class="content">
             <h1>Lab Tech Processed</h1>
-            <form action="">
+            <form action="{{url_for('labtech_tests_processed',data_dict=data)}}" method = "POST">
 
                 <label for="">Date Tested:</label>
-                <input id="start_date" type="date"> -
-                <input id="end_date" type="date"><br>
+                <input name = "start_date" id="start_date" type="date"> -
+                <input name = "end_date" id="end_date" type="date"><br>
 
                 <label for="testing_result">Testing Result:</label>
                 <select name="testing_result">            
                     <option value="all">All</option>
+                    <option value="negative">NEGATIVE</option>
+                    <option value="positive">POSITIVE</option>
                 </select><br>
 
                 <table class="gridtable" >
@@ -30,10 +32,10 @@
                         <th>Date Processed</th>
                         <th>Result</th>
                     </tr>
-                    {% for k,v in data_dict.items() %}
+                    {% for v in data_dict %}
                     <tr>
                         <td> {{v[0]}} </td>
-                        <td> {{v[1]}} </td>
+                        <td><a href="{{url_for('explore_pool_result')}}"> {{v[1]}}</a></td>
                         <td> {{v[2]}} </td>
                         <td> {{v[3]}} </td>
                         <td> {{v[4]}} </td>

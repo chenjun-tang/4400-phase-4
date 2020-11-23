@@ -11,21 +11,54 @@
     <div class="page">
         <div class="content">
             <h1>Signup for a Test</h1>
-            <form action="">
+            <form action="{{url_for('sign_up',data = data,sites = sites, user_name = user_name)}}" method = "POST">
                 <label for="testing_site">Testing Site:</label>
                 <select name="testing_site">            
+<<<<<<< Updated upstream
                     <option value="all">All</option>
                 </select>
+=======
+                    {% for s in sites%}
+                    <option value="{{s[0]}}">{{s[0]}}</option>                    
+                    {% endfor %}
+                    <option value="All">All</option>
+                </select><br>
+>>>>>>> Stashed changes
 
                 <label for="date">Date:</label>
-                <input id="start_date" type="date"> -
-                <input id="end_date" type="date">
+                <input id="start_date" name = "start_date" type="date"> -
+                <input id="end_date" name = "end_date" type="date">
                 
                 <label for="time">Time:</label>
-                <input id="start_time" type="time"> -
-                <input id="end_time" type="time"><br>
+                <input name="start_time" id="start_time" type="time"> -
+                <input name="end_time" id="end_time" type="time"><br>
 
+<<<<<<< Updated upstream
                 <a href="{{url_for('home')}}" class="custom_btn">Back(Home)</a>
+=======
+                <table class="gridtable">
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Site Address</th>
+                        <th>Testing Site</th>
+                        <th>Signup</th>
+                    </tr>
+                    {% for v in data%}
+                        <tr>
+
+                            <td style="text-transform: capitalize;"> {{v[0]}}</td>
+                            <td>{{v[1]}}</td>
+                            <td>{{v[2]}}</td>
+                            <td>{{v[6]}}</td>
+                            <td><input type="radio" name="sign" value="{{v[0]}}" ></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+                <a href="{{url_for('home', user_type='Student', user_name=user_name)}}" class="custom_btn">Back(Home)</a>
+                <input type="submit" value="Filter" class="custom_btn">
+>>>>>>> Stashed changes
                 <input type="reset" value="Reset" class="custom_btn">
                 <input type="submit" value="Signup" class="custom_btn">
 
