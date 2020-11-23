@@ -14,7 +14,7 @@ mysql.init_app(app)
 
 conn = mysql.connect()
 cursor =conn.cursor()
-#cursor.execute("use covidtest_fall2020")
+# cursor.execute("use covidtest_fall2020")
 exec_sql_file(cursor, './db_init.sql')
 exec_proc_file(cursor, './db_procedure.sql')
 
