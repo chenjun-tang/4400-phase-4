@@ -16,3 +16,18 @@ function validate(){
         document.getElementById("mySubmit").disabled = true;
     }
 }
+
+
+function validZipCode(){
+    var zipcode = document.getElementById("zip").value;
+    if(zipcode.length != 5){
+        console.log("not");
+        document.getElementById("tips").innerHTML="<font color='red'>A zip code should be consist of 5 digits.</font>";
+        document.getElementById("mySubmit").disabled = false;
+    }else{
+        console.log("is");
+        document.getElementById("tips").innerHTML="";
+        document.getElementById("mySubmit").disabled = true;
+    }
+
+}

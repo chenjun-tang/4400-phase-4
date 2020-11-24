@@ -1,31 +1,65 @@
 from flask import Flask, render_template, request, redirect, url_for
+from flask_login import UserMixin, LoginManager, login_required, login_user
 import os
 from flaskext.mysql import MySQL
 from execSQL import *
 from hashlib import md5
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
+app.config["SECRET_KEY"] = "4400"
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.session_protection = 'basic'
+login_manager.login_view = '/login'
+login_manager.login_message = 'Please login.'
+
 
 mysql = MySQL()
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'sunzhimin'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
 conn = mysql.connect()
 cursor =conn.cursor()
-# cursor.execute("use covidtest_fall2020")
-exec_sql_file(cursor, './db_init.sql')
-exec_proc_file(cursor, './db_procedure.sql')
+cursor.execute("use covidtest_fall2020")
+# exec_sql_file(cursor, './db_init.sql')
+# exec_proc_file(cursor, './db_procedure.sql')
+
+
+# User models
+class User(UserMixin):
+    def is_authenticated(self):
+        return True
+    def is_active(self):
+        return True
+    def is_anonymous(self):
+        return False 
+    def get_id(self):
+        return "1"
+
+def split_space(string):
+    print(string)
+    return string.strip().split(",")
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    user = User()
+    return user
+
 
 # screen 1
-@app.route("/", methods=['GET', 'POST'])
+@app.route("/login", methods=['GET', 'POST'])
 def index():
     line = ""
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
         password = md5(request.form['password'].encode('utf-8')).hexdigest()
 
+        print(username)
+        print(password)
         # Check if account exists using MySQL
         cursor.execute('SELECT * FROM user WHERE username = %s AND user_password = %s', (username, password))
         account = cursor.fetchone()
@@ -34,6 +68,8 @@ def index():
         if not account:
             line = "Incorrect username/password!"
         else:
+            user = User()
+            login_user(user)
             is_student = cursor.execute('SELECT * FROM student WHERE student_username = %s',(username))
             if is_student:
                 return redirect(url_for("home", user_type='Student', user_name=username))
@@ -96,6 +132,7 @@ def home():
 
 # screen 4
 @app.route("/student_test_results", methods=['GET','POST'])
+@login_required
 def student_test_results():
     data = ()
     student_name = '' # to get student_name
@@ -376,14 +413,45 @@ def view_appointments():
     return render_template("view_appointments.html", user_type = user_type, user_name = user_name, sites=sites, data=data)
 
 # screen 14
-@app.route("/reassign_tester")
+@app.route("/reassign_tester", methods=["GET", "POST"])
 def reassign_tester():
+    if request.method == 'GET':
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+        cursor.execute('call view_testers()')
+        cursor.execute('select * from view_testers_result')
+        data = cursor.fetchall()
+        #need to split the sites for each tester
+        return render_template("reassign_tester.html", data = data, user_type=user_type, user_name = user_name)
+    elif request.method == 'POST':
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+        # how to handle lots of testers at one time
+
     return render_template("reassign_tester.html")
 
 # screen 15
-@app.route("/create_testing_site")
+@app.route("/create_testing_site", methods=["GET", "POST"])
 def create_testing_site():
-    return render_template("create_testing_site.html")
+    cursor.execute('select sitetester_username from sitetester')
+    testers = cursor.fetchall()
+    user_type = request.args.get('user_type')
+    user_name = request.args.get('user_name')
+    if request.method == 'POST':
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+        site_name = request.form['site']
+        street = request.form['address']
+        city = request.form['city']
+        state = request.form['state']
+        zipcode = request.form['zip']
+        locaiton = request.form['location']
+        tester = request.form['tester']
+        print("call create_testing_site(%s, %s, %s, %s, %s, %s, %s)",(site_name,street,city,state,zipcode,locaiton,tester))
+        count = cursor.execute("call create_testing_site(%s, %s, %s, %s, %s, %s, %s)",(site_name,street,city,state,zipcode,locaiton,tester))
+        print(count)
+
+    return render_template("create_testing_site.html",testers = testers, user_type=user_type, user_name = user_name)
 
 # screen 16
 @app.route("/explore_pool_result")
@@ -424,4 +492,5 @@ def daily_results():
 
 
 if __name__ == '__main__':
+    app.jinja_env.filters['split_space'] = split_space
     app.run(debug=True)
