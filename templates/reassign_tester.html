@@ -26,18 +26,18 @@
                         <td> {{v[0]}} </td>
                         <td> {{v[1]}} </td>
                         <td> {{v[2]}} </td>
-                        <td>
-                        {% list1 = v[3] | split_space %}
-                        <select name="">
-                            {% for item in list1 %}
-                               <option value={{item}}>{{item}}</option>
-                            {% endfor %} 
-                        </select>
-                           
-                        </td>
-
+                        {% if v[3] %}
+                            <td>
+                                <select name="" id="">
+                                    {% for item in v[3] %}
+                                    <option value="{{item}}">{{item}}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>  
+                        {% else %}
+                            <td>None</td>
+                        {% endif %} 
                     </tr>
-
                     {% endfor %}
 
 

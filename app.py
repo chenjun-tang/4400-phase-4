@@ -17,7 +17,7 @@ login_manager.login_message = 'Please login.'
 
 mysql = MySQL()
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'sunzhimin'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
@@ -420,8 +420,13 @@ def reassign_tester():
         user_name = request.args.get('user_name')
         cursor.execute('call view_testers()')
         cursor.execute('select * from view_testers_result')
-        data = cursor.fetchall()
-        #need to split the sites for each tester
+        raw_data = cursor.fetchall()
+        data = []
+        for raw_item in raw_data:
+            item = list(raw_item)
+            if item[3]:
+                item[3] = item[3].split(",")
+            data.append(item)
         return render_template("reassign_tester.html", data = data, user_type=user_type, user_name = user_name)
     elif request.method == 'POST':
         user_type = request.args.get('user_type')
