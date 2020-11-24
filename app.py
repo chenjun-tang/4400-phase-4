@@ -17,13 +17,23 @@ login_manager.login_message = 'Please login.'
 
 mysql = MySQL()
 app.config['MYSQL_DATABASE_USER'] = 'root'
+<<<<<<< Updated upstream
 app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
+=======
+
+app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
+#app.config['MYSQL_DATABASE_DB'] = 'Database'
+
+app.config['MYSQL_DATABASE_PASSWORD'] = '88566717'
+
+>>>>>>> Stashed changes
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
 conn = mysql.connect()
 cursor =conn.cursor()
 cursor.execute("use covidtest_fall2020")
+<<<<<<< Updated upstream
 # exec_sql_file(cursor, './db_init.sql')
 # exec_proc_file(cursor, './db_procedure.sql')
 
@@ -48,6 +58,17 @@ def split_space(string):
 def load_user(user_id):
     user = User()
     return user
+=======
+exec_sql_file(cursor, './db_init.sql')
+cursor.execute("SELECT * FROM STUDENT")
+data = cursor.fetchall()
+print(data)
+exec_proc_file(cursor, './db_procedure.sql')
+cursor.callproc('view_testers')
+cursor.execute("SELECT * FROM view_testers_result")
+data = cursor.fetchall()
+print(data)
+>>>>>>> Stashed changes
 
 
 # screen 1
@@ -184,6 +205,7 @@ def explore_test_result():
 #  screen 6
 @app.route("/aggregate_results", methods=['GET','POST'])
 def aggregate_results():
+<<<<<<< Updated upstream
     user_type = ''
     user_name = ''
     data = []
@@ -191,11 +213,34 @@ def aggregate_results():
     sites = cursor.fetchall()
     if request.method == 'GET':
         user_type = request.args.get('user_type')
+=======
+    return render_template("aggregate_results.html")
+
+#  screen 7
+@app.route("/sign_up", methods=['GET','POST'])
+def sign_up():
+
+
+    if request.method == 'POST' :
+>>>>>>> Stashed changes
         user_name = request.args.get('user_name')
         cursor.execute('call aggregate_results(null,null,null,null,null);')
         cursor.execute('select * from aggregate_results_result')
         data = cursor.fetchall()
+<<<<<<< Updated upstream
         return render_template("aggregate_results.html", user_type = user_type, user_name = user_name, data=data, sites=sites)
+=======
+        return render_template("sign_up.html", data=data, sites=sites, user_name=user_name)
+    else:
+        user_name = request.args.get('user_name')
+        cursor.execute('select * from site')
+        sites = cursor.fetchall()
+    cursor.execute('call test_sign_up_filter(12345, null, null, null,null,null);')
+    cursor.execute('select * from test_sign_up_filter_result;')
+    data = cursor.fetchall();
+    return render_template("sign_up.html", data=data, sites=sites, user_name=user_name)
+
+>>>>>>> Stashed changes
 
     elif request.method == 'POST':
         user_type = request.args.get('user_type')

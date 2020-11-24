@@ -13,7 +13,14 @@
             <h1>Signup for a Test</h1>
             <form action="">
                 <label for="testing_site">Testing Site:</label>
+<<<<<<< Updated upstream
                 <select name="testing_site">            
+=======
+                <select name="testing_site">
+                    <option value="all">All</option>
+                </select>
+
+>>>>>>> Stashed changes
                     {% for s in sites%}
                     <option value="{{s[0]}}">{{s[0]}}</option>                    
                     {% endfor %}
@@ -27,6 +34,11 @@
                 <input id="start_time" type="time"> -
                 <input id="end_time" type="time"><br>
 
+<<<<<<< Updated upstream
+=======
+
+                <a href="{{url_for('home')}}" class="custom_btn">Back(Home)</a>
+>>>>>>> Stashed changes
                 <table class="gridtable">
                     <tr>
                         <th>Date</th>
@@ -38,6 +50,10 @@
                 </table>
 
                 <a href="{{url_for('home', user_type='Student', user_name=user_name)}}" class="custom_btn">Back(Home)</a>
+<<<<<<< Updated upstream
+=======
+                <input type="submit" value="Filter" class="custom_btn">
+>>>>>>> Stashed changes
                 <input type="reset" value="Reset" class="custom_btn">
                 <input type="submit" value="Signup" class="custom_btn">
 
