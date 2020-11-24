@@ -11,11 +11,11 @@
     <div class="page">
         <div class="content">
             <h1>Lab Tech Processed</h1>
-            <form action="">
+            <form action="{{url_for('labtech_tests_processed', user_name=user_name, user_type=user_type)}}" method="POST">
 
                 <label for="">Date Tested:</label>
-                <input id="start_date" type="date"> -
-                <input id="end_date" type="date"><br>
+                <input id="start_date" name="start_date" type="date"> -
+                <input id="end_date" name="end_date" type="date"><br>
 
                 <label for="testing_result">Testing Result:</label>
                 <select name="testing_result">            
@@ -30,10 +30,10 @@
                         <th>Date Processed</th>
                         <th>Result</th>
                     </tr>
-                    {% for k,v in data_dict.items() %}
+                    {% for v in data_dict %}
                     <tr>
                         <td> {{v[0]}} </td>
-                        <td> {{v[1]}} </td>
+                        <td> <a href="{{ url_for('explore_pool_result', user_type=user_type, user_name=user_name, pool_id=v[1])}}" style="text-decoration:underline;">{{v[1]}}</a> </td>
                         <td> {{v[2]}} </td>
                         <td> {{v[3]}} </td>
                         <td> {{v[4]}} </td>
@@ -42,7 +42,7 @@
                 </table>
 
                 
-                <a href="{{url_for('home')}}" class="custom_btn">Back(Home)</a>
+                <a href="{{url_for('home', user_type=user_type, user_name=user_name)}}" class="custom_btn">Back(Home)</a>
                 <input type="reset" value="Reset" class="custom_btn">
                 <input type="submit" value="Filter" class="custom_btn">
                 

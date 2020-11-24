@@ -225,19 +225,77 @@ def aggregate_results():
 #  screen 7
 @app.route("/sign_up")
 def sign_up():
-    user_name = request.args.get('user_name')
-    cursor.execute('select * from site')
-    sites = cursor.fetchall()
-    return render_template("sign_up.html", user_name = user_name, sites=sites)
+    if request.method == 'POST' :
+        if (request.form.action == 'Filter'):
+            user_name = request.args.get('user_name')
+            cursor.execute('select * from site')
+            sites = cursor.fetchall()
+            testing_site = request.form['testing_site']
+            cursor.execute('select location from student where student_username = %s;',user_name)
+            student_loc = cursor.fetchall()
+            startDate = request.form["start_date"]
+            endDate = request.form['end_date']
+            startTime = request.form['start_time']
+            endTime = request.form['end_time']
+            sign = request.form['sign']
+
+            if testing_site == 'All':
+                testing_site = None
+            if len(startDate) == 0:
+                startDate = None
+            if len(endDate) == 0:
+                endDate = None
+            if len(startTime) ==0:
+                startTime = None
+            if len(endTime) == 0:
+                endTime = None
+            print(sign)
+            cursor.execute('call test_sign_up_filter(%s, %s, %s, %s,%s,%s);', (user_name, testing_site, startDate, endDate, startTime, endTime))
+            cursor.execute('select * from test_sign_up_filter_result;')
+            data = cursor.fetchall()
+            return render_template("sign_up.html", data=data, sites=sites, user_name=user_name)
+        elif (request.form.action == 'Signup'):
+            #insert into database
+            pass
+    else:
+        user_name = request.args.get('user_name')
+        cursor.execute('select * from site')
+        sites = cursor.fetchall()
+    cursor.execute('call test_sign_up_filter(12345, null, null, null,null,null);')
+    cursor.execute('select * from test_sign_up_filter_result;')
+    data = cursor.fetchall();
+    return render_template("sign_up.html", data=data, sites=sites, user_name=user_name)
 
 #screen 8
 @app.route("/labtech_tests_processed",methods=['GET', 'POST'])
-def labtech_tests_processed():
-    # simulate the data
-    data = {
-        1:['1', '22332','8/17/20','8/29/20','Negative'],
-        2:['1', '22332','8/17/20','8/29/20','Negative'],
-    }
+def labtech_tests_processed():    
+    user_type = request.args.get('user_type')
+    user_name = request.args.get('user_name')
+    if request.method == 'GET':
+        cursor.execute('call tests_processed(null,null,null,%s)', user_name)
+        cursor.execute('select * from tests_processed_result')
+        data = cursor.fetchall()
+        return render_template("labtech_tests_processed.html", user_name=user_name, user_type=user_type, data_dict=data)
+    
+    if request.method == 'POST':
+        start_date = request.form['start_date']
+        end_date = request.form['end_date']
+        status = request.form['testing_result']
+        if len(start_date) == 0:
+            start_date = None
+        if len(end_date) == 0:
+            end_date = None
+        if status == "all" :
+            status = None
+        cursor.execute('call tests_processed(%s,%s,%s,%s)', (start_date, end_date, status, user_name))
+        cursor.execute('select * from tests_processed_result')
+        data = cursor.fetchall()
+        return render_template("labtech_tests_processed.html", user_name=user_name, user_type=user_type,  data_dict=data)
+
+
+    cursor.execute('call tests_processed(null,null,null,%s)','123')
+    cursor.execute('select * from tests_processed_result')
+    data = cursor.fetchall()
     return render_template("labtech_tests_processed.html", data_dict=data)
 
 #screen 9
