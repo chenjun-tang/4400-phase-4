@@ -1,9 +1,14 @@
 .content {
-    width: 700px;
+    width: 1200px;
 }
 
 .content form label {
     display: inline;
+}
+
+.content .table_div {
+    max-height: 600px;
+    overflow-y: scroll;
 }
 
 .content form input, .content form select {
@@ -15,5 +20,5 @@
 }
 
 .gridtable {
-    width: 600px;
+    width: 1100px;
 }
