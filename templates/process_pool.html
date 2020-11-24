@@ -12,8 +12,7 @@
         <div class="content">
             <h1>Process Pool</h1>
             <form action="{{ url_for('process_pool', user_type=user_type, user_name=user_name, pool_id=pool_id) }}" method="POST">
-                <label for="">Pool ID:</label>
-                <span id="pool_id">{{pool_id}}</span></input></li><br>
+                <p>Pool ID: {{pool_id}}</p>
 
                 <label for="">Date Processed:</label>
                 <input id="start_date" name="date" type="date" required><br>
@@ -59,7 +58,7 @@
                         <tr>
                             <td> {{v[0]}} </td>
                             <td> {{v[1]}} </td>
-                            <td> {{v[2]}} </td>
+                            <td style="text-transform: capitalize;"> {{v[2]}} </td>
                         </tr>
                         {% endfor %}
                     </table>
