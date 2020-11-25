@@ -214,32 +214,50 @@ def aggregate_results():
 #  screen 7
 @app.route("/sign_up", methods=['GET','POST'])
 def sign_up():
+    if request.method == 'POST':
+        #  get user name and list of sites
+        user_name = request.args.get('user_name')
+        cursor.execute('select * from site')
+        sites = cursor.fetchall()
 
-    if request.method == 'POST' :
-        if (request.form.action == 'Filter'):
-            user_name = request.args.get('user_name')
-            cursor.execute('select * from site')
-            sites = cursor.fetchall()
-            testing_site = request.form['testing_site']
-            cursor.execute('select location from student where student_username = %s;',user_name)
-            student_loc = cursor.fetchall()
-            startDate = request.form["start_date"]
-            endDate = request.form['end_date']
-            startTime = request.form['start_time']
-            endTime = request.form['end_time']
+        testing_site = request.form['testing_site']
+        startDate = request.form["start_date"]
+        endDate = request.form['end_date']
+        startTime = request.form['start_time']
+        endTime = request.form['end_time']
+        cursor.execute('select max(test_id) from test;')
+        max_id = cursor.fetchone()
+        test_id = int(max_id[0])+1
+
+        if testing_site == 'all':
+            testing_site = None
+        if len(startDate) == 0:
+            startDate = None
+        if len(endDate) == 0:
+            endDate = None
+        if len(startTime) ==0:
+            startTime = None
+        if len(endTime) == 0:
+            endTime = None
+
+        if request.form["action"] == "Signup":
             sign = request.form['sign']
+            sign_list = sign.split("+")
+            print(sign_list)
+            date, time, site_name = sign_list
+            print(user_name)
+            print(date)
+            print(time)
+            print(site_name)
+            print(test_id)
+            cursor.execute('call test_sign_up(%s, %s, %s, %s, %s);', (user_name, site_name, date, time, test_id))
+            cursor.execute('call test_sign_up_filter(%s, %s, %s, %s,%s,%s);',
+                           (user_name, testing_site, startDate, endDate, startTime, endTime))
+            cursor.execute('select * from test_sign_up_filter_result;')
+            data = cursor.fetchall()
+            return render_template("sign_up.html", data=data, sites=sites, user_name=user_name)
+        else:
 
-            if testing_site == 'All':
-                testing_site = None
-            if len(startDate) == 0:
-                startDate = None
-            if len(endDate) == 0:
-                endDate = None
-            if len(startTime) ==0:
-                startTime = None
-            if len(endTime) == 0:
-                endTime = None
-            print(sign)
             cursor.execute('call test_sign_up_filter(%s, %s, %s, %s,%s,%s);', (user_name, testing_site, startDate, endDate, startTime, endTime))
             cursor.execute('select * from test_sign_up_filter_result;')
             data = cursor.fetchall()
@@ -249,11 +267,10 @@ def sign_up():
         user_name = request.args.get('user_name')
         cursor.execute('select * from site')
         sites = cursor.fetchall()
-
-    cursor.execute('call test_sign_up_filter(12345, null, null, null,null,null);')
-    cursor.execute('select * from test_sign_up_filter_result;')
-    data = cursor.fetchall();
-    return render_template("sign_up.html", data=data, sites=sites, user_name=user_name)
+        cursor.execute('call test_sign_up_filter(%s, null, null, null,null,null);', (user_name))
+        cursor.execute('select * from test_sign_up_filter_result;')
+        data = cursor.fetchall();
+        return render_template("sign_up.html", data=data, sites=sites, user_name=user_name)
 
 
 #screen 8
