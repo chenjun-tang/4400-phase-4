@@ -17,20 +17,15 @@ login_manager.login_message = 'Please login.'
 
 mysql = MySQL()
 app.config['MYSQL_DATABASE_USER'] = 'root'
-#app.config['MYSQL_DATABASE_DB'] = 'Database'
-
-app.config['MYSQL_DATABASE_PASSWORD'] = '88566717'
-
-
+app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
 conn = mysql.connect()
 cursor =conn.cursor()
 cursor.execute("use covidtest_fall2020")
-
-#exec_sql_file(cursor, './db_init.sql')
-#exec_proc_file(cursor, './db_procedure.sql')
+# exec_sql_file(cursor, './db_init.sql')
+# exec_proc_file(cursor, './db_procedure.sql')
 
 
 # User models
@@ -40,7 +35,7 @@ class User(UserMixin):
     def is_active(self):
         return True
     def is_anonymous(self):
-        return False
+        return False 
     def get_id(self):
         return "1"
 
@@ -54,17 +49,6 @@ def load_user(user_id):
     user = User()
     return user
 
-exec_sql_file(cursor, './db_init.sql')
-#cursor.execute("SELECT * FROM STUDENT")
-#data = cursor.fetchall()
-#print(data)
-exec_proc_file(cursor, './db_procedure.sql')
-#cursor.callproc('view_testers')
-#cursor.execute("SELECT * FROM view_testers_result")
-#data = cursor.fetchall()
-#print(data)
-
-
 
 # screen 1
 @app.route("/login", methods=['GET', 'POST'])
@@ -73,9 +57,6 @@ def index():
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
         password = md5(request.form['password'].encode('utf-8')).hexdigest()
-
-        print(username)
-        print(password)
         # Check if account exists using MySQL
         cursor.execute('SELECT * FROM user WHERE username = %s AND user_password = %s', (username, password))
         account = cursor.fetchone()
@@ -109,7 +90,6 @@ def index():
 def register():
     # do the similar as the function above
     if request.method == 'POST':
-        print(request.form)
         username = request.form['username']
         email = request.form['email']
         fname = request.form['fname']
@@ -150,28 +130,25 @@ def home():
 @app.route("/student_test_results", methods=['GET','POST'])
 @login_required
 def student_test_results():
-    data = ()
-    student_name = '' # to get student_name
+    student_name = request.args.get('user_name')
     if request.method == 'GET':
-        student_name = request.args.get('user_name')
-        search_count = cursor.execute('call student_view_results(%s, %s, %s, %s)', (student_name,None, None, None))
+        cursor.execute('call student_view_results(%s, %s, %s, %s)', (student_name,None, None, None))
         cursor.execute('select * from student_view_results_result')
         data = cursor.fetchall()
         return render_template("student_test_results.html", data_dict = data, user_name = student_name)
 
     elif request.method == 'POST':
-        student_name = request.form['student_name']
         status = request.form["status"]
         startDate = request.form["startDate"]
-        if status == 'All':
+        endDate = request.form["endDate"]
+        if status == 'all':
             status = None
         if startDate == '':
             startDate = None
-        endDate = request.form["endDate"]
         if endDate == '':
             endDate = None
 
-        search_count = cursor.execute('call student_view_results(%s, %s, %s, %s)', (student_name,status, startDate, endDate))
+        cursor.execute('call student_view_results(%s, %s, %s, %s)', (student_name, status, startDate, endDate))
         cursor.execute('select * from student_view_results_result')
         data = cursor.fetchall()
         return render_template("student_test_results.html", data_dict = data, user_name = student_name)
@@ -207,9 +184,36 @@ def aggregate_results():
     sites = cursor.fetchall()
     if request.method == 'GET':
         user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+        cursor.execute('call aggregate_results(null,null,null,null,null);')
+        cursor.execute('select * from aggregate_results_result')
+        data = cursor.fetchall()
+        return render_template("aggregate_results.html", user_type = user_type, user_name = user_name, data=data, sites=sites)
 
-    return render_template("aggregate_results.html")
+    elif request.method == 'POST':
+        user_type = request.args.get('user_type')
+        user_name = request.args.get('user_name')
+        location = request.form['location']
+        housing_type = request.form['housing_type']
+        testing_site = request.form['testing_site']
+        start_date = request.form['start_date']
+        end_date = request.form['end_date']
+        if location == 'All':
+            location = None
+        if housing_type == 'All':
+            housing_type = None
+        if testing_site == 'All':
+            testing_site = None
+        if len(start_date) == 0:
+            start_date = None
+        if len(end_date) == 0:
+            end_date = None
+        # print('call aggregate_results(%s,%s,%s,%s,%s);',(location, housing_type, testing_site,start_date,end_date))
 
+        cursor.execute('call aggregate_results(%s,%s,%s,%s,%s);',(location, housing_type, testing_site,start_date,end_date))
+        cursor.execute('select * from aggregate_results_result')
+        data = cursor.fetchall()
+        return render_template("aggregate_results.html", user_type = user_type, user_name = user_name, data=data, sites=sites)
 
 #  screen 7
 @app.route("/sign_up", methods=['GET','POST'])
@@ -272,15 +276,18 @@ def sign_up():
         data = cursor.fetchall();
         return render_template("sign_up.html", data=data, sites=sites, user_name=user_name)
 
-
 #screen 8
 @app.route("/labtech_tests_processed",methods=['GET', 'POST'])
-def labtech_tests_processed():
-    # simulate the data
-
+def labtech_tests_processed():    
+    user_type = request.args.get('user_type')
+    user_name = request.args.get('user_name')
+    if request.method == 'GET':
+        cursor.execute('call tests_processed(null,null,null,%s)', user_name)
+        cursor.execute('select * from tests_processed_result')
+        data = cursor.fetchall()
+        return render_template("labtech_tests_processed.html", user_name=user_name, user_type=user_type, data_dict=data)
+    
     if request.method == 'POST':
-        username = request.args.get('user_name')
-        print(username);
         start_date = request.form['start_date']
         end_date = request.form['end_date']
         status = request.form['testing_result']
@@ -290,17 +297,11 @@ def labtech_tests_processed():
             end_date = None
         if status == "all" :
             status = None
-        cursor.execute('call tests_processed(%s,%s,%s,%s)', (start_date, end_date, status, username))
+        cursor.execute('call tests_processed(%s,%s,%s,%s)', (start_date, end_date, status, user_name))
         cursor.execute('select * from tests_processed_result')
         data = cursor.fetchall()
-        return render_template("labtech_tests_processed.html", data_dict=data)
-
-
-    cursor.execute('call tests_processed(null,null,null,%s)','123')
-    cursor.execute('select * from tests_processed_result')
-    data = cursor.fetchall()
-    return render_template("labtech_tests_processed.html", data_dict=data)
-
+        return render_template("labtech_tests_processed.html", user_name=user_name, user_type=user_type,  data_dict=data)
+        
 #screen 9
 @app.route("/view_pools", methods=['GET', 'POST'])
 def view_pools():
@@ -482,8 +483,6 @@ def reassign_tester():
         cursor.execute('call view_testers()')
         cursor.execute('select * from view_testers_result')
         raw_data = cursor.fetchall()
-        for i in raw_data:
-            print(i[3])
         data = []
         for raw_item in raw_data:
             item = list(raw_item)
@@ -524,60 +523,46 @@ def create_testing_site():
 # screen 16
 @app.route("/explore_pool_result")
 def explore_pool_result():
-    user_type=''
-    user_name=''
-    pool_id = 1
-    data = {}
-    if request.method == 'GET':
-        user_type = request.args.get('user_type')
-        user_name = request.args.get('user_name')
-        pool_id = request.args.get('pool_id')
-        if pool_id != None:
-            cursor.execute('call pool_metadata(%s)',(pool_id))
-            cursor.execute('select * from pool_metadata_result')
-            pool_data = cursor.fetchone()
-            cursor.execute('call tests_in_pool(%s)',(pool_id))
-            cursor.execute('select * from tests_in_pool_result')
-            tests_data = cursor.fetchall()
-            print("tests_data:",tests_data)
-            return render_template("explore_pool_result.html", user_type = user_type, user_name = user_name, pool_data=pool_data, tests_data=tests_data)
-    # return render_template("explore_pool_result.html")
+    user_type = request.args.get('user_type')
+    user_name = request.args.get('user_name')
+    pool_id = request.args.get('pool_id')
+    if pool_id != None:
+        cursor.execute('call pool_metadata(%s)',(pool_id))
+        cursor.execute('select * from pool_metadata_result')
+        pool_data = cursor.fetchone()
+        cursor.execute('call tests_in_pool(%s)',(pool_id))
+        cursor.execute('select * from tests_in_pool_result')
+        tests_data = cursor.fetchall()
+        return render_template("explore_pool_result.html", user_type = user_type, user_name = user_name, pool_data=pool_data, tests_data=tests_data)
 
 # screen 17
 @app.route("/change_testing_site", methods=["GET", "POST"])
-def change_testing_site():
+def change_testing_site():    
     user_name = request.args.get('user_name')
-    user_name = 'akarev16'
     if request.method == 'GET':
-        print(user_name)
         cursor.execute("select phone_num from employee where emp_username = %s", user_name)
         phone_num = cursor.fetchall()
         phone_num = phone_num[0][0]
 
-        cursor.execute("select * from user where username = %s",user_name)
-        name = cursor.fetchall()
-        name = name[0][3] + " " + name[0][4]
+        cursor.execute("select fname, lname from user where username = %s",user_name)
+        name = cursor.fetchone()
+        name = " ".join(name)
         print(name)
         print(phone_num)
-
+        # get the assigned sites
         cursor.execute("CALL tester_assigned_sites(%s)", user_name)
         cursor.execute("select * from tester_assigned_sites_result;")
         sites = cursor.fetchall()
-
-        sites_data = []
-
-        for raw_item in sites:
-            sites_data.append(raw_item[0])
-        print(sites_data)
+        sites = [s[0] for s in sites]
 
         cursor.execute("select * from site")
         all_sites = cursor.fetchall()
         all_sites_data = []
         for site in all_sites:
-            if (site[0] not in sites_data):
+            if (site[0] not in sites):
                 all_sites_data.append(site[0])
         print(all_sites_data)
-        return render_template("change_testing_site.html", name=name, phone_num=phone_num, sites=sites_data,
+        return render_template("change_testing_site.html", user_name=user_name, name=name, phone_num=phone_num, sites=sites,
                                add_sites=all_sites_data)
     else:
         if request.form['add'] == 'None':
@@ -627,7 +612,6 @@ def change_testing_site():
     #print(all_sites_data)
     return render_template("change_testing_site.html",user_name = user_name, name=name, phone_num=phone_num, sites=sites_data,
                            add_sites=all_sites_data)
-
 
 # screen 18
 @app.route("/daily_results")
