@@ -6,3 +6,11 @@
     width: 150px;
 }
 
+.content .gridtable a {
+    text-decoration: underline;
+}
+
+.content .table_div {
+    overflow-y: scroll;
+    max-width: 1000px;
+}
