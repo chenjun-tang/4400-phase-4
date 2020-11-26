@@ -94,7 +94,7 @@ def register():
         email = request.form['email']
         fname = request.form['fname']
         lname = request.form['lname']
-        password = md5(request.form['password'].encode('utf-8')).hexdigest()
+        password = request.form['password']
 
         if "lab_tech" not in request.form and "site_tester" not in request.form:
             house_type = request.form['housing_type']
