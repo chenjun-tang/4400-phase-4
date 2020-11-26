@@ -119,8 +119,6 @@ def register():
 # screen 3
 @app.route("/home", methods=['GET', 'POST'])
 def home():
-    user_type = ""
-    user_name = ""
     if request.method == 'GET':
         user_type = request.args.get('user_type')
         user_name = request.args.get('user_name')
@@ -158,10 +156,6 @@ def student_test_results():
 #  screen 5
 @app.route("/explore_test_result")
 def explore_test_result():
-    user_type=''
-    user_name=''
-    test_id = None
-    data = {}
     if request.method == 'GET':
         user_type = request.args.get('user_type')
         user_name = request.args.get('user_name')
@@ -177,9 +171,6 @@ def explore_test_result():
 #  screen 6
 @app.route("/aggregate_results", methods=['GET','POST'])
 def aggregate_results():
-    user_type = ''
-    user_name = ''
-    data = []
     cursor.execute('select * from site')
     sites = cursor.fetchall()
     if request.method == 'GET':
