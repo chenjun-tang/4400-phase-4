@@ -23,9 +23,9 @@ mysql.init_app(app)
 
 conn = mysql.connect()
 cursor =conn.cursor()
-cursor.execute("use covidtest_fall2020")
-# exec_sql_file(cursor, './db_init.sql')
-# exec_proc_file(cursor, './db_procedure.sql')
+# cursor.execute("use covidtest_fall2020")
+exec_sql_file(cursor, './db_init.sql')
+exec_proc_file(cursor, './db_procedure.sql')
 
 
 # User models
@@ -353,28 +353,21 @@ def create_pool():
 #screen 11
 @app.route("/process_pool", methods=["GET", "POST"])
 def process_pool():
-    user_type=''
-    user_name=''
+    user_type = request.args.get('user_type')
+    user_name = request.args.get('user_name')
     pool_id = request.args.get('pool_id')
     pool_status = ''
     date = ''
     processed_by = ''
     data = []
     if request.method == 'GET':
-        user_type = request.args.get('user_type')
-        user_name = request.args.get('user_name')
-        pool_id = request.args.get('pool_id')
-        print('get', pool_id)
         if pool_id:
             cursor.execute('SELECT test_id, appt_date,test_status FROM TEST WHERE pool_id = %s', (pool_id))
             data = cursor.fetchall()
 
     elif request.method == 'POST':
-        print('post', pool_id)
         if 'status' in request.form:
             pool_status = request.form['status']
-        user_type = request.args.get('user_type')
-        user_name = request.args.get('user_name')
         date = request.form['date']
         processed_by = user_name
 
@@ -393,12 +386,7 @@ def process_pool():
                 test_id = d[0]
                 test_status = 'negative'
                 cursor.execute('call process_test(%s, %s)', (test_id, test_status))
-        # cursor.execute('SELECT * FROM TEST WHERE pool_id = %s', (pool_id))
-        # data1 = cursor.fetchall()
-        # print(data1)
-        # cursor.execute('SELECT * FROM POOL WHERE pool_id = %s', (pool_id))
-        # data1 = cursor.fetchall()
-        # print(data1)
+        return redirect(url_for("explore_pool_result", user_type = user_type, user_name = user_name, pool_id = pool_id))
     return render_template("process_pool.html", user_type = user_type, user_name = user_name, pool_id = pool_id, data=data)
 
 # screen 12
@@ -425,16 +413,9 @@ def view_appointments():
     user_name = request.args.get('user_name')
     cursor.execute('select * from site')
     sites = cursor.fetchall()
-    site = ''
-    s_date = ''
-    e_date = ''
-    s_time = ''
-    e_time = ''
-    availablity = ''
-    data = []
     if request.method == 'GET':
         cursor.execute('call view_appointments(null, null, null, null, null, null)')
-        cursor.execute('select * from view_appointments_result')
+        cursor.execute('select * from view_appointments_result order by appt_date, appt_time')
         data = cursor.fetchall()
     elif request.method == 'POST':
         user_type = request.args.get('user_type')

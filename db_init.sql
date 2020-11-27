@@ -274,7 +274,7 @@ VALUES
 ('Stamps Health Services','740 Ferst Drive','Atlanta','GA','30332','West'),
 ('Bobby Dodd Stadium','150 Bobby Dodd Way NW','Atlanta','GA','30332','East'),
 ('Caddell Building','280 Ferst Drive NW','Atlanta','GA','30332','West'),
-('Coda Building','760 Spring Street ','Atlanta','GA','30332','East'),
+('Coda Building','760 Spring Street','Atlanta','GA','30332','East'),
 ('GT Catholic Center','172 4th St NW','Atlanta','GA','30313','East'),
 ('West Village','532 8th St NW','Atlanta','GA','30318','West'),
 ('GT Connector','116 Bobby Dodd Way NW','Atlanta','GA','30313','East'),
