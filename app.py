@@ -468,25 +468,47 @@ def view_appointments():
 # screen 14
 @app.route("/reassign_tester", methods=["GET", "POST"])
 def reassign_tester():
-    if request.method == 'GET':
-        user_type = request.args.get('user_type')
-        user_name = request.args.get('user_name')
-        cursor.execute('call view_testers()')
-        cursor.execute('select * from view_testers_result')
-        raw_data = cursor.fetchall()
-        data = []
-        for raw_item in raw_data:
-            item = list(raw_item)
-            if item[3]:
-                item[3] = item[3].split(",")
-            data.append(item)
-        return render_template("reassign_tester.html", data = data, user_type=user_type, user_name = user_name)
-    elif request.method == 'POST':
-        user_type = request.args.get('user_type')
-        user_name = request.args.get('user_name')
+    user_type = request.args.get('user_type')
+    user_name = request.args.get('user_name')
+        
+    if request.method == 'POST':
         # how to handle lots of testers at one time
+        cursor.execute('SELECT sitetester_username from sitetester')
+        testers = cursor.fetchall()
 
-    return render_template("reassign_tester.html")
+        for tester in testers:
+            delete_site = request.form.get("de"+tester[0])
+            add_site = request.form.get("add"+tester[0])
+            print(tester[0], delete_site, add_site)
+            if add_site != None and len(add_site)>0 and add_site != "Not selected":
+                cursor.execute('CALL assign_tester(%s,%s)',(tester[0],add_site))
+            if delete_site != None and len(delete_site)>0 and delete_site != "Not selected":
+                count = cursor.execute('CALL unassign_tester(%s,%s)',(tester[0],delete_site))
+    
+    cursor.execute('call view_testers()')
+    cursor.execute('select * from view_testers_result')
+    raw_data = cursor.fetchall()
+    data = []
+    cursor.execute("select site_name from site")
+    all_sites = cursor.fetchall()
+    for raw_item in raw_data:
+        item = list(raw_item)
+        if item[3]:
+            item.append(item[3].split(","))
+            # item[3] = item[3].split(",")
+            not_assigned_tests = []
+            for site in all_sites:
+                if site[0] not in item[4]:
+                    not_assigned_tests.append(site[0])
+            item.append(not_assigned_tests)
+        else:
+            all_sites_name = []
+            for site in all_sites:
+                all_sites_name.append(site[0])
+            item.append(all_sites_name)
+        data.append(item)
+
+    return render_template("reassign_tester.html", data = data, user_type=user_type, user_name = user_name)
 
 # screen 15
 @app.route("/create_testing_site", methods=["GET", "POST"])

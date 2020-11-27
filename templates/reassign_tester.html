@@ -18,25 +18,44 @@
                         <th>Name</th>
                         <th>Phone Number</th>
                         <th>Assigned Sites</th>
+                        <th>Delete Site Choose from</th>
+                        <th>Assign Site Choose from</th>
                     </tr>
 
                     {% for v in data %}
                     <tr>
 
-                        <td> {{v[0]}} </td>
+                        <td name="{{v[0]}}">  {{v[0]}}</td>
                         <td> {{v[1]}} </td>
                         <td> {{v[2]}} </td>
-                        {% if v[3] %}
+                        <td> {{v[3]}} </td>
+                        {% if v[4] %}
+                            <td name="">
+                                <select name="de{{v[0]}}" id="{{v[0]}}">
+                                    <option value="Not selected">---Not selected---</option>
+                                    {% for item in v[4] %}
+                                    <option value="{{item}}">{{item}}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>  
+                        {% else %}
+                            <td name = "">None</td>
+                        {% endif %} 
+                         {% if v[5] %}
                             <td>
-                                <select name="" id="">
-                                    {% for item in v[3] %}
+                                <select name="add{{v[0]}}" id="">
+                                    <option value="Not selected">---Not selected---</option>
+                                    {% for item in v[5] %}
                                     <option value="{{item}}">{{item}}</option>
                                     {% endfor %}
                                 </select>
                             </td>  
                         {% else %}
                             <td>None</td>
-                        {% endif %} 
+                        {% endif %}
+
+
+
                     </tr>
                     {% endfor %}
 
