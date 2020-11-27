@@ -1,5 +1,8 @@
-from flask import Flask, Response, render_template, request, redirect, url_for
-from flask_login import UserMixin, LoginManager, login_required, login_user,logout_user 
+from flask import Flask, Response, render_template, request, redirect, url_for, flash
+from flask_login import UserMixin, LoginManager, login_required, current_user, login_user,logout_user 
+from flask_wtf import FlaskForm
+from wtforms import StringField, BooleanField, PasswordField
+from wtforms.validators import DataRequired
 import os
 from flaskext.mysql import MySQL
 from execSQL import *
@@ -11,7 +14,7 @@ app.config["SECRET_KEY"] = "4400"
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.session_protection = 'basic'
-login_manager.login_view = '/login'
+login_manager.login_view = '/'
 login_manager.login_message = 'Please login.'
 
 
@@ -30,8 +33,9 @@ cursor.execute("use covidtest_fall2020")
 
 # User models
 class User(UserMixin):
-    def __init__(self,id):
-        self.username = id
+
+    def __init__(self,username):
+        self.username = username
     def is_authenticated(self):
         return True
     def is_active(self):
@@ -42,36 +46,45 @@ class User(UserMixin):
         return self.username
 
 
+class LoginForm(FlaskForm):
+    username = StringField('usrname', validators=[DataRequired()])
+    password = PasswordField('password', validators=[DataRequired()])
+    remember_me = BooleanField("remember me", default=False)
+
+
 @login_manager.user_loader
-def load_user(user_id):
-    # user = User()
-    # return user
-    return User(user_id)
+def load_user(username):
+    return User(username)
 
 @app.route("/logout")
 @login_required
 def logout():
     logout_user()
-    return Response('<p>Logged out</p>')
+    return redirect(url_for('index'))
 
 
 # screen 1
-@app.route("/login", methods=['GET', 'POST'])
+@app.route('/',methods=['GET', 'POST'])
 def index():
-    line = ""
-    if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
-        username = request.form['username']
-        password = md5(request.form['password'].encode('utf-8')).hexdigest()
-        # Check if account exists using MySQL
+    # next = request.args.get('next')
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = LoginForm()
+    
+    if form.validate_on_submit():
+        username = form.username.data
+        password = md5(form.password.data.encode('utf-8')).hexdigest()
+        remeber_me = form.remember_me.data
         cursor.execute('SELECT * FROM user WHERE username = %s AND user_password = %s', (username, password))
         account = cursor.fetchone()
-        # we can now get the username and password here
-        # after checking, we need to find the user type and redirect to home
+        
         if not account:
-            line = "Incorrect username/password!"
+            line = "Invaild username or password!"
+            return render_template("index.html", msg=line, form=form)
         else:
             user = User(username)
-            login_user(user)
+            login_user(user, remember=form.remember_me.data)
+            
             is_student = cursor.execute('SELECT * FROM student WHERE student_username = %s',(username))
             if is_student:
                 return redirect(url_for("home", user_type='Student', user_name=username))
@@ -87,12 +100,10 @@ def index():
             elif is_labtech ==0 and is_sitetester==1:
                 return redirect(url_for("home", user_type='Tester', user_name=username))
 
-
-    return render_template("index.html", msg=line)
+    return render_template('index.html', form=form)
 
 # screen 2
 @app.route("/register", methods=['GET', 'POST'])
-@login_required
 def register():
     # do the similar as the function above
     if request.method == 'POST':
