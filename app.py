@@ -548,7 +548,6 @@ def change_testing_site():
         for site in all_sites:
             if (site[0] not in sites):
                 all_sites_data.append(site[0])
-        print(all_sites_data)
         return render_template("change_testing_site.html", user_name=user_name, user_type=user_type, name=name, sites=sites,
                                add_sites=all_sites_data)
     else:
@@ -556,7 +555,6 @@ def change_testing_site():
             pass
         else:
             site = request.form['add']
-            site.strip()
             cursor.execute("CALL assign_tester(%s, %s)", (user_name, site))
 
         if request.form['delete'] == 'None':

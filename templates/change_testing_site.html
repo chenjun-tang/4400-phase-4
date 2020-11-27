@@ -25,9 +25,9 @@
                         <td>Assigned Sites</td>
                         {% if sites %}
                             <td>
-                                {% for item in sites %}
+                                {%- for item in sites -%}
                                 <p>{{item}}</p>
-                                {% endfor %}
+                                {%- endfor -%}
                             </td>
                         {% else %}
                             <td>None</td>
