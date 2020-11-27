@@ -11,7 +11,7 @@
     <div class="page">
         <div class="content">
             <h1>Student View Test Results</h1>
-            <form action="{{ url_for('student_test_results') }}" method="POST">
+            <form action="{{ url_for('student_test_results', user_name=user_name) }}" method="POST">
                 <label for="status">Status:</label>
                 <select name="status"  id="status">
                     <option value="all">All</option>
@@ -27,9 +27,9 @@
 
                 <table class="gridtable" >
                     <tr>
-                        <th>Pool ID#</th>
+                        <th>Test ID#</th>
                         <th>Timeslot Date</th>
-                        <th>Date processedd</th>
+                        <th>Date Processed</th>
                         <th>Pool Status</th>
                         <th>Status</th>
                     </tr>
@@ -39,7 +39,7 @@
                         <td> {{v[1]}} </td>
                         <td> {{v[2]}} </td>
                         <td> {{v[3]}} </td>
-                        <td> {{v[4]}} </td>
+                        <td style="text-transform: capitalize;"> {{v[4]}} </td>
                     </tr>
                     {% endfor %}
                 </table>

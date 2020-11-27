@@ -11,38 +11,40 @@
     <div class="page">
         <div class="content">
             <h1>Lab Tech Processed</h1>
-            <form action="">
+            <form action="{{url_for('labtech_tests_processed', user_type=user_type, user_name=user_name)}}" method = "POST">
 
                 <label for="">Date Tested:</label>
-                <input id="start_date" type="date"> -
-                <input id="end_date" type="date"><br>
+                <input name = "start_date" id="start_date" type="date"> -
+                <input name = "end_date" id="end_date" type="date"><br>
 
                 <label for="testing_result">Testing Result:</label>
-                <select name="testing_result">            
+                <select name="testing_result">
                     <option value="all">All</option>
+                    <option value="negative">NEGATIVE</option>
+                    <option value="positive">POSITIVE</option>
                 </select><br>
-
-                <table class="gridtable" >
-                    <tr>
-                        <th>Test ID#</th>
-                        <th>Pool ID</th>
-                        <th>Date Tested</th>
-                        <th>Date Processed</th>
-                        <th>Result</th>
-                    </tr>
-                    {% for k,v in data_dict.items() %}
-                    <tr>
-                        <td> {{v[0]}} </td>
-                        <td> {{v[1]}} </td>
-                        <td> {{v[2]}} </td>
-                        <td> {{v[3]}} </td>
-                        <td> {{v[4]}} </td>
-                    </tr>
-                    {% endfor %}
-                </table>
-
-                
-                <a href="{{url_for('home')}}" class="custom_btn">Back(Home)</a>
+                <div class="table_div">
+                    <table class="gridtable" >
+                        <tr>
+                            <th>Test ID#</th>
+                            <th>Pool ID</th>
+                            <th>Date Tested</th>
+                            <th>Date Processed</th>
+                            <th>Result</th>
+                        </tr>
+                        {% for v in data_dict %}
+                        <tr>
+                            <td> {{v[0]}} </td>
+                            <td><a href="{{url_for('explore_pool_result', user_type=user_type, user_name=user_name, pool_id=v[1])}}"> {{v[1]}}</a></td>
+                            <td> {{v[2]}} </td>
+                            <td> {{v[3]}} </td>
+                            <td> {{v[4]}} </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                    
+                <a href="{{url_for('home', user_type=user_type, user_name=user_name)}}" class="custom_btn">Back(Home)</a>
                 <input type="reset" value="Reset" class="custom_btn">
                 <input type="submit" value="Filter" class="custom_btn">
                 
