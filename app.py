@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for
-from flask_login import UserMixin, LoginManager, login_required, login_user
+from flask import Flask, Response, render_template, request, redirect, url_for
+from flask_login import UserMixin, LoginManager, login_required, login_user,logout_user 
 import os
 from flaskext.mysql import MySQL
 from execSQL import *
@@ -23,13 +23,15 @@ mysql.init_app(app)
 
 conn = mysql.connect()
 cursor =conn.cursor()
-# cursor.execute("use covidtest_fall2020")
-exec_sql_file(cursor, './db_init.sql')
-exec_proc_file(cursor, './db_procedure.sql')
+cursor.execute("use covidtest_fall2020")
+# exec_sql_file(cursor, './db_init.sql')
+# exec_proc_file(cursor, './db_procedure.sql')
 
 
 # User models
 class User(UserMixin):
+    def __init__(self,id):
+        self.username = id
     def is_authenticated(self):
         return True
     def is_active(self):
@@ -37,17 +39,20 @@ class User(UserMixin):
     def is_anonymous(self):
         return False 
     def get_id(self):
-        return "1"
-
-def split_space(string):
-    print(string)
-    return string.strip().split(",")
+        return self.username
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    user = User()
-    return user
+    # user = User()
+    # return user
+    return User(user_id)
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return Response('<p>Logged out</p>')
 
 
 # screen 1
@@ -65,7 +70,7 @@ def index():
         if not account:
             line = "Incorrect username/password!"
         else:
-            user = User()
+            user = User(username)
             login_user(user)
             is_student = cursor.execute('SELECT * FROM student WHERE student_username = %s',(username))
             if is_student:
@@ -87,6 +92,7 @@ def index():
 
 # screen 2
 @app.route("/register", methods=['GET', 'POST'])
+@login_required
 def register():
     # do the similar as the function above
     if request.method == 'POST':
@@ -118,6 +124,7 @@ def register():
 
 # screen 3
 @app.route("/home", methods=['GET', 'POST'])
+@login_required
 def home():
     if request.method == 'GET':
         user_type = request.args.get('user_type')
@@ -155,6 +162,7 @@ def student_test_results():
 
 #  screen 5
 @app.route("/explore_test_result")
+@login_required
 def explore_test_result():
     if request.method == 'GET':
         user_type = request.args.get('user_type')
@@ -170,6 +178,7 @@ def explore_test_result():
 
 #  screen 6
 @app.route("/aggregate_results", methods=['GET','POST'])
+@login_required
 def aggregate_results():
     cursor.execute('select * from site')
     sites = cursor.fetchall()
@@ -208,6 +217,7 @@ def aggregate_results():
 
 #  screen 7
 @app.route("/sign_up", methods=['GET','POST'])
+@login_required
 def sign_up():
     if request.method == 'POST':
         #  get user name and list of sites
@@ -269,6 +279,7 @@ def sign_up():
 
 #screen 8
 @app.route("/labtech_tests_processed",methods=['GET', 'POST'])
+@login_required
 def labtech_tests_processed():    
     user_type = request.args.get('user_type')
     user_name = request.args.get('user_name')
@@ -295,6 +306,7 @@ def labtech_tests_processed():
         
 #screen 9
 @app.route("/view_pools", methods=['GET', 'POST'])
+@login_required
 def view_pools():
     user_type = request.args.get('user_type')
     user_name = request.args.get('user_name')
@@ -323,6 +335,7 @@ def view_pools():
 
 # screen 10
 @app.route("/create_pool", methods=['GET', 'POST'])
+@login_required
 def create_pool():
     user_type = request.args.get('user_type')
     user_name = request.args.get('user_name')
@@ -352,6 +365,7 @@ def create_pool():
 
 #screen 11
 @app.route("/process_pool", methods=["GET", "POST"])
+@login_required
 def process_pool():
     user_type = request.args.get('user_type')
     user_name = request.args.get('user_name')
@@ -391,6 +405,7 @@ def process_pool():
 
 # screen 12
 @app.route("/create_appointment", methods=["GET", "POST"])
+@login_required
 def create_appointment():
     user_type = request.args.get('user_type')
     user_name = request.args.get('user_name')
@@ -408,6 +423,7 @@ def create_appointment():
 
 # screen 13
 @app.route("/view_appointments", methods=["GET", "POST"])
+@login_required
 def view_appointments():
     user_type = request.args.get('user_type')
     user_name = request.args.get('user_name')
@@ -448,6 +464,7 @@ def view_appointments():
 
 # screen 14
 @app.route("/reassign_tester", methods=["GET", "POST"])
+@login_required
 def reassign_tester():
     user_type = request.args.get('user_type')
     user_name = request.args.get('user_name')
@@ -476,7 +493,6 @@ def reassign_tester():
         item = list(raw_item)
         if item[3]:
             item.append(item[3].split(","))
-            # item[3] = item[3].split(",")
             not_assigned_tests = []
             for site in all_sites:
                 if site[0] not in item[4]:
@@ -493,6 +509,7 @@ def reassign_tester():
 
 # screen 15
 @app.route("/create_testing_site", methods=["GET", "POST"])
+@login_required
 def create_testing_site():
     cursor.execute('select sitetester_username from sitetester')
     testers = cursor.fetchall()
@@ -517,6 +534,7 @@ def create_testing_site():
 
 # screen 16
 @app.route("/explore_pool_result")
+@login_required
 def explore_pool_result():
     user_type = request.args.get('user_type')
     user_name = request.args.get('user_name')
@@ -532,6 +550,7 @@ def explore_pool_result():
 
 # screen 17
 @app.route("/change_testing_site", methods=["GET", "POST"])
+@login_required
 def change_testing_site():    
     user_name = request.args.get('user_name')
     user_type = request.args.get('user_type')    
@@ -597,6 +616,7 @@ def change_testing_site():
 
 # screen 18
 @app.route("/daily_results")
+@login_required
 def daily_results():
     user_type = request.args.get('user_type')
     user_name = request.args.get('user_name')
@@ -607,5 +627,4 @@ def daily_results():
 
 
 if __name__ == '__main__':
-    app.jinja_env.filters['split_space'] = split_space
     app.run(debug=True)
