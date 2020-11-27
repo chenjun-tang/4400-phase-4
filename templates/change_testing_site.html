@@ -11,32 +11,31 @@
     <div class="page">
         <div class="content">
             <h1>Tester Change Testing Site</h1>
-             <form action="{{ url_for('change_testing_site', user_name = user_name, name = name, phone_num = phone_num, sites = sites, add_sites = all_sites_data) }}" method="POST">
+             <form action="{{ url_for('change_testing_site', user_name = user_name, user_type=user_type)}}" method="POST">
                 <table class="gridtable" >
                     <tr>
                         <th>Username</th>
-                        <th>Full Name</th>
-                        <th>Current Assigned Sites</th>
-                        <th>Add Sites</th>
-                        <th>Delete Sites</th>
+                        <th> {{user_name}}</th>
                     </tr>
                     <tr>
-
-                        <td> {{user_name}}</td>
+                        <td>Full Name</td>
                         <td> {{name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Assigned Sites</td>
                         {% if sites %}
                             <td>
-                                <select name="" id="">
-                                    {% for item in sites %}
-                                    <option value="{{item}}">{{item}}</option>
-                                    {% endfor %}
-                                </select>
+                                {%- for item in sites -%}
+                                <p>{{item}}</p>
+                                {%- endfor -%}
                             </td>
                         {% else %}
                             <td>None</td>
                         {% endif %}
-
-                        {% if sites %}
+                    </tr>
+                    <tr>
+                        <td>Add Sites</td>
+                        {% if add_sites %}
                             <td>
                                 <select name="add" id="">
                                     {% for item in add_sites %}
@@ -48,7 +47,10 @@
                         {% else %}
                             <td>None</td>
                         {% endif %}
+                    </tr>
 
+                    <tr>
+                        <td>Delete Sites</td>
                         {% if sites %}
                         <td><select name="delete" id="">
                                     {% for item in sites %}
@@ -62,7 +64,7 @@
                         {% endif %}
                     </tr>
                 </table>
-                <a href="{{url_for('home')}}" class="custom_btn">Back(Home)</a>
+                <a href="{{url_for('home', user_name=user_name, user_type=user_type)}}" class="custom_btn">Back(Home)</a>
                 <input type="submit" value="Update" class="custom_btn">
              </form>
 

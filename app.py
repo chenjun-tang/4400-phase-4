@@ -531,16 +531,12 @@ def explore_pool_result():
 @app.route("/change_testing_site", methods=["GET", "POST"])
 def change_testing_site():    
     user_name = request.args.get('user_name')
-    if request.method == 'GET':
-        cursor.execute("select phone_num from employee where emp_username = %s", user_name)
-        phone_num = cursor.fetchall()
-        phone_num = phone_num[0][0]
+    user_type = request.args.get('user_type')    
+    cursor.execute("select fname, lname from user where username = %s",user_name)
+    name = cursor.fetchone()
+    name = " ".join(name)
 
-        cursor.execute("select fname, lname from user where username = %s",user_name)
-        name = cursor.fetchone()
-        name = " ".join(name)
-        print(name)
-        print(phone_num)
+    if request.method == 'GET':
         # get the assigned sites
         cursor.execute("CALL tester_assigned_sites(%s)", user_name)
         cursor.execute("select * from tester_assigned_sites_result;")
@@ -553,8 +549,7 @@ def change_testing_site():
         for site in all_sites:
             if (site[0] not in sites):
                 all_sites_data.append(site[0])
-        print(all_sites_data)
-        return render_template("change_testing_site.html", user_name=user_name, name=name, phone_num=phone_num, sites=sites,
+        return render_template("change_testing_site.html", user_name=user_name, user_type=user_type, name=name, sites=sites,
                                add_sites=all_sites_data)
     else:
         if request.form['add'] == 'None':
@@ -562,8 +557,6 @@ def change_testing_site():
         else:
             site = request.form['add']
             cursor.execute("CALL assign_tester(%s, %s)", (user_name, site))
-
-
 
         if request.form['delete'] == 'None':
             pass;
@@ -578,12 +571,6 @@ def change_testing_site():
     cursor.execute("select phone_num from employee where emp_username = %s", user_name)
     phone_num = cursor.fetchall()
     phone_num = phone_num[0][0]
-
-    cursor.execute("select * from user where username = %s", user_name)
-    name = cursor.fetchall()
-    name = name[0][3] + " " + name[0][4]
-    #print(name)
-    #print(phone_num)
 
     cursor.execute("CALL tester_assigned_sites(%s)", user_name)
     cursor.execute("select * from tester_assigned_sites_result;")
@@ -602,7 +589,7 @@ def change_testing_site():
         if (site[0] not in sites_data):
             all_sites_data.append(site[0])
     #print(all_sites_data)
-    return render_template("change_testing_site.html",user_name = user_name, name=name, phone_num=phone_num, sites=sites_data,
+    return render_template("change_testing_site.html",user_name = user_name, user_type=user_type, name=name, sites=sites_data,
                            add_sites=all_sites_data)
 
 # screen 18
