@@ -499,6 +499,7 @@ def reassign_tester():
                     not_assigned_tests.append(site[0])
             item.append(not_assigned_tests)
         else:
+            item.append(None)
             all_sites_name = []
             for site in all_sites:
                 all_sites_name.append(site[0])
