@@ -448,6 +448,7 @@ def create_testing_site():
         locaiton = request.form['location']
         tester = request.form['tester']
         print("call create_testing_site(%s, %s, %s, %s, %s, %s, %s)",(site_name,street,city,state,zipcode,locaiton,tester))
+        # why cannot insert
         count = cursor.execute("call create_testing_site(%s, %s, %s, %s, %s, %s, %s)",(site_name,street,city,state,zipcode,locaiton,tester))
         print(count)
 
