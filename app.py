@@ -413,16 +413,9 @@ def view_appointments():
     user_name = request.args.get('user_name')
     cursor.execute('select * from site')
     sites = cursor.fetchall()
-    site = ''
-    s_date = ''
-    e_date = ''
-    s_time = ''
-    e_time = ''
-    availablity = ''
-    data = []
     if request.method == 'GET':
         cursor.execute('call view_appointments(null, null, null, null, null, null)')
-        cursor.execute('select * from view_appointments_result')
+        cursor.execute('select * from view_appointments_result order by appt_date, appt_time')
         data = cursor.fetchall()
     elif request.method == 'POST':
         user_type = request.args.get('user_type')
