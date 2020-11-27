@@ -1,3 +1,7 @@
 .content {
-    width: 550px;
+    width: 700px;
+}
+
+.content form input, .content form select {
+    border: 1px solid #dee0e4;
 }
