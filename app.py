@@ -20,15 +20,15 @@ login_manager.login_message = 'Please login.'
 
 mysql = MySQL()
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'sunzhimin'
+app.config['MYSQL_DATABASE_PASSWORD'] = '88566717'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
 conn = mysql.connect()
 cursor =conn.cursor()
 cursor.execute("use covidtest_fall2020")
-# exec_sql_file(cursor, './db_init.sql')
-# exec_proc_file(cursor, './db_procedure.sql')
+exec_sql_file(cursor, './db_init.sql')
+exec_proc_file(cursor, './db_procedure.sql')
 
 
 # User models

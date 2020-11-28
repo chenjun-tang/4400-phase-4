@@ -45,7 +45,8 @@
                                 </select>
                             </td>
                         {% else %}
-                            <td>None</td>
+                            <td><select name="add" id="">
+                                <option value="None">None</option></td>
                         {% endif %}
                     </tr>
 
@@ -60,7 +61,9 @@
                                 </select>
                         </td>
                         {% else %}
-                            <td>None</td>
+
+                            <td><select name="delete" id="">
+                                <option value="None">None </option></td>
                         {% endif %}
                     </tr>
                 </table>
