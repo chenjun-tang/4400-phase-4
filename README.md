@@ -7,4 +7,4 @@ To run this application, we simply cd into the file in the terminal and run comm
 
 Work Distribution:  
   Chenjun Tang: Mainly worked on designing and implementing front end webpages. Helped writing backend functions to connect MySQL and front end. Also worked on testing and fixing errors.  
-  Zhimin Sun: Mainly worked on implementing front end webpages, writing backend functions to connect MySQL and front end, testing and fixing errors.  
+  Zhimin Sun: Mainly worked on implementing front end webpages, writing view functions which handle the requests to our application, testing and fixing errors.  
