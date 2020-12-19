@@ -20,15 +20,15 @@ login_manager.login_message = 'Please login.'
 
 mysql = MySQL()
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = '88566717'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
 conn = mysql.connect()
 cursor =conn.cursor()
 cursor.execute("use covidtest_fall2020")
-exec_sql_file(cursor, './db_init.sql')
-exec_proc_file(cursor, './db_procedure.sql')
+# exec_sql_file(cursor, './db_init.sql')
+# exec_proc_file(cursor, './db_procedure.sql')
 
 
 # User models
@@ -269,13 +269,13 @@ def sign_up():
             cursor.execute('call test_sign_up(%s, %s, %s, %s, %s);', (user_name, site_name, date, time, test_id))
             cursor.execute('call test_sign_up_filter(%s, %s, %s, %s,%s,%s);',
                            (user_name, testing_site, startDate, endDate, startTime, endTime))
-            cursor.execute('select * from test_sign_up_filter_result;')
+            cursor.execute('select * from test_sign_up_filter_result order by appt_date, appt_time;')
             data = cursor.fetchall()
             return render_template("sign_up.html", data=data, sites=sites, user_name=user_name)
         else:
 
             cursor.execute('call test_sign_up_filter(%s, %s, %s, %s,%s,%s);', (user_name, testing_site, startDate, endDate, startTime, endTime))
-            cursor.execute('select * from test_sign_up_filter_result;')
+            cursor.execute('select * from test_sign_up_filter_result order by appt_date, appt_time;')
             data = cursor.fetchall()
             return render_template("sign_up.html", data=data, sites=sites, user_name=user_name)
 
@@ -284,7 +284,7 @@ def sign_up():
         cursor.execute('select * from site')
         sites = cursor.fetchall()
         cursor.execute('call test_sign_up_filter(%s, null, null, null,null,null);', (user_name))
-        cursor.execute('select * from test_sign_up_filter_result;')
+        cursor.execute('select * from test_sign_up_filter_result order by appt_date, appt_time;')
         data = cursor.fetchall();
         return render_template("sign_up.html", data=data, sites=sites, user_name=user_name)
 
